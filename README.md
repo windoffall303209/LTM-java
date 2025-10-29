@@ -1,6 +1,6 @@
 # 🔨 Auction System - Hệ Thống Đấu Giá Trực Tuyến
 
-Hệ thống đấu giá trực tuyến real-time với Spring Boot, WebSocket và MySQL.
+Hệ thống đấu giá trực tuyến real-time với Spring Boot, WebSocket, MySQL và tính năng lên lịch tự động.
 
 ## 📋 Mục Lục
 
@@ -13,18 +13,20 @@ Hệ thống đấu giá trực tuyến real-time với Spring Boot, WebSocket v
 - [Tài Khoản Mặc Định](#tài-khoản-mặc-định)
 - [Cấu Trúc Project](#cấu-trúc-project)
 - [API Endpoints](#api-endpoints)
+- [Tính Năng Nổi Bật](#tính-năng-nổi-bật)
 
 ---
 
 ## 📖 Giới Thiệu
 
-**Auction System** là một ứng dụng web đấu giá trực tuyến với các tính năng:
+**Auction System** là một ứng dụng web đấu giá trực tuyến với các tính năng hiện đại:
 
-- Đấu giá real-time qua WebSocket
-- Đặt giá tự động (Auto Bid)
-- Quản lý danh sách theo dõi (Watchlist)
-- Phân quyền Admin/User
-- Giao diện responsive với Bootstrap 5
+- 🔴 Đấu giá real-time qua WebSocket
+- ⏰ Lên lịch đấu giá tự động (Auto Scheduling)
+- 🚀 Tự động kết thúc khi không có người đặt giá
+- ⭐ Quản lý danh sách theo dõi (Watchlist)
+- 🔐 Phân quyền Admin/User với Spring Security
+- 📱 Giao diện responsive với Bootstrap 5
 
 ---
 
@@ -33,22 +35,30 @@ Hệ thống đấu giá trực tuyến real-time với Spring Boot, WebSocket v
 ### 👤 **Chức năng USER:**
 
 - ✅ Đăng ký/Đăng nhập (Spring Security + BCrypt)
-- ✅ Xem danh sách đấu giá đang diễn ra
+- ✅ Xem danh sách đấu giá **đang diễn ra** và **sắp diễn ra** (PENDING)
 - ✅ Xem chi tiết đấu giá với cập nhật real-time
 - ✅ Đặt giá thủ công và Quick Bid
-- ✅ **Đặt giá tự động** (Auto Bid) - Tự động đặt giá khi bị vượt
 - ✅ Xem lịch sử đặt giá của mình (My Bids)
-- ✅ Quản lý danh sách theo dõi (Watchlist)
-- ✅ Xem số dư tài khoản
+- ✅ Thêm đấu giá vào danh sách theo dõi (Watchlist) - **Cả PENDING auctions**
+- ✅ Nhận thông báo real-time khi đấu giá bắt đầu/kết thúc
+- ✅ Xem số dư tài khoản (mặc định 2 tỷ VND)
 
 ### 👑 **Chức năng ADMIN:**
 
 - ✅ Dashboard quản trị với thống kê tổng quan
 - ✅ Tạo/Sửa/Xóa đấu giá (CRUD)
-- ✅ Start/Stop đấu giá
-- ✅ Quản lý người dùng
-- ✅ Ban/Unban user
+- ✅ **Thiết lập thời gian bắt đầu và kết thúc** cho đấu giá
+- ✅ **Bắt đầu đấu giá thủ công** (Manual Start)
+- ✅ Kết thúc đấu giá bất cứ lúc nào
+- ✅ Quản lý người dùng (Ban/Unban)
 - ✅ Cập nhật số dư user
+
+### 🤖 **Tính năng tự động:**
+
+- ⏰ **Auto Start:** Đấu giá tự động bắt đầu khi đến `startTime`
+- 🏁 **Auto End:** Đấu giá tự động kết thúc khi hết `endTime`
+- ⚡ **Smart End:** Tự động kết thúc sớm sau **20 phút không có người tăng giá**
+- 🔔 **Real-time Notifications:** Thông báo WebSocket khi đấu giá bắt đầu/kết thúc
 
 ---
 
@@ -58,8 +68,9 @@ Hệ thống đấu giá trực tuyến real-time với Spring Boot, WebSocket v
 - **Security:** Spring Security + BCrypt
 - **Database:** MySQL 8.0
 - **ORM:** Spring Data JPA / Hibernate
-- **Frontend:** Thymeleaf + Bootstrap 5
+- **Frontend:** Thymeleaf + Bootstrap 5 + Bootstrap Icons
 - **Real-time:** WebSocket (SockJS + STOMP)
+- **Scheduling:** Spring Scheduler (@Scheduled)
 - **Build Tool:** Maven
 - **Java Version:** 17
 
@@ -279,7 +290,7 @@ Hệ thống tự động tạo các tài khoản sau khi khởi động lần �
 
 ```
 Username: admin
-Password: admin
+Password: admin123
 Số dư: 2,000,000,000 VND (2 tỷ)
 Quyền: ADMIN (Toàn quyền quản trị)
 ```
@@ -312,29 +323,59 @@ auction-system/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/auction/
-│   │   │   ├── config/              # Cấu hình (Security, WebSocket, DataInit)
-│   │   │   ├── controller/          # REST Controllers & View Controllers
-│   │   │   ├── dto/                 # Data Transfer Objects
-│   │   │   ├── model/               # JPA Entities
-│   │   │   ├── repository/          # JPA Repositories
-│   │   │   ├── service/             # Business Logic
-│   │   │   ├── websocket/           # WebSocket Handlers
+│   │   │   ├── config/
+│   │   │   │   ├── DataInitializer.java      # Khởi tạo dữ liệu ban đầu
+│   │   │   │   ├── SecurityConfig.java       # Cấu hình Spring Security
+│   │   │   │   └── WebSocketConfig.java      # Cấu hình WebSocket
+│   │   │   ├── controller/
+│   │   │   │   ├── AdminController.java      # REST API cho Admin
+│   │   │   │   ├── AuctionController.java    # REST API Auctions
+│   │   │   │   ├── AuthController.java       # Đăng ký/Profile
+│   │   │   │   ├── BidController.java        # REST API Bidding
+│   │   │   │   ├── ViewController.java       # Render HTML pages
+│   │   │   │   └── WatchlistController.java  # REST API Watchlist
+│   │   │   ├── dto/
+│   │   │   │   ├── ApiResponse.java          # Generic API response
+│   │   │   │   ├── AuctionDTO.java
+│   │   │   │   ├── BidDTO.java
+│   │   │   │   ├── UserDTO.java
+│   │   │   │   └── WatchlistDTO.java
+│   │   │   ├── model/
+│   │   │   │   ├── Auction.java              # Entity với lastBidTime
+│   │   │   │   ├── Bid.java
+│   │   │   │   ├── User.java
+│   │   │   │   └── Watchlist.java
+│   │   │   ├── repository/
+│   │   │   │   ├── AuctionRepository.java
+│   │   │   │   ├── BidRepository.java
+│   │   │   │   ├── UserRepository.java
+│   │   │   │   └── WatchlistRepository.java
+│   │   │   ├── service/
+│   │   │   │   ├── AuctionSchedulerService.java  # 🆕 Auto scheduling
+│   │   │   │   ├── AuctionService.java
+│   │   │   │   ├── BidService.java
+│   │   │   │   ├── CustomUserDetailsService.java
+│   │   │   │   ├── UserService.java
+│   │   │   │   └── WatchlistService.java
 │   │   │   └── AuctionSystemApplication.java
 │   │   └── resources/
-│   │       ├── templates/           # Thymeleaf HTML templates
-│   │       │   ├── admin/           # Admin pages
-│   │       │   ├── auction-detail.html
-│   │       │   ├── dashboard.html
+│   │       ├── templates/
+│   │       │   ├── admin/
+│   │       │   │   ├── dashboard.html        # Admin overview
+│   │       │   │   ├── auctions.html         # Quản lý auctions
+│   │       │   │   └── users.html            # Quản lý users
+│   │       │   ├── auction-detail.html       # Chi tiết đấu giá
+│   │       │   ├── dashboard.html            # User dashboard
 │   │       │   ├── login.html
-│   │       │   ├── my-bids.html
 │   │       │   ├── register.html
-│   │       │   └── watchlist.html
+│   │       │   ├── my-bids.html              # Lịch sử đặt giá
+│   │       │   └── watchlist.html            # Danh sách theo dõi
 │   │       ├── static/
-│   │       │   ├── css/             # CSS files
-│   │       │   └── js/              # JavaScript files
+│   │       │   ├── css/
+│   │       │   └── js/
 │   │       └── application.properties
 │   └── test/
-├── pom.xml                          # Maven dependencies
+├── pom.xml
 └── README.md
 ```
 
@@ -344,23 +385,23 @@ auction-system/
 
 ### **User Pages:**
 
-| Trang            | Đường dẫn       | Mô tả                           |
-| ---------------- | --------------- | ------------------------------- |
-| Trang chủ        | `/`             | Landing page                    |
-| Đăng nhập        | `/login`        | Form đăng nhập                  |
-| Đăng ký          | `/register`     | Form đăng ký tài khoản mới      |
-| Dashboard        | `/dashboard`    | Danh sách đấu giá đang diễn ra  |
-| Chi tiết đấu giá | `/auction/{id}` | Xem chi tiết và đặt giá         |
-| Lượt đặt giá     | `/my-bids`      | Xem lịch sử đặt giá của mình    |
-| Theo dõi         | `/watchlist`    | Danh sách đấu giá đang theo dõi |
+| Trang            | Đường dẫn       | Mô tả                                                |
+| ---------------- | --------------- | ---------------------------------------------------- |
+| Trang chủ        | `/`             | Landing page                                         |
+| Đăng nhập        | `/login`        | Form đăng nhập                                       |
+| Đăng ký          | `/register`     | Form đăng ký tài khoản mới                           |
+| Dashboard        | `/dashboard`    | Danh sách đấu giá **ACTIVE** và **PENDING**          |
+| Chi tiết đấu giá | `/auction/{id}` | Xem chi tiết và đặt giá (hoặc theo dõi nếu PENDING)  |
+| Lịch sử đấu giá  | `/my-bids`      | Xem lịch sử đặt giá của mình                         |
+| Theo dõi         | `/watchlist`    | Danh sách đấu giá đang theo dõi (bao gồm cả PENDING) |
 
 ### **Admin Pages:**
 
-| Trang              | Đường dẫn         | Mô tả                    |
-| ------------------ | ----------------- | ------------------------ |
-| Admin Dashboard    | `/admin`          | Tổng quan hệ thống       |
-| Quản lý Đấu Giá    | `/admin/auctions` | CRUD đấu giá             |
-| Quản lý Người Dùng | `/admin/users`    | Quản lý users, ban/unban |
+| Trang              | Đường dẫn         | Mô tả                                    |
+| ------------------ | ----------------- | ---------------------------------------- |
+| Admin Dashboard    | `/admin`          | Tổng quan hệ thống                       |
+| Quản lý Đấu Giá    | `/admin/auctions` | CRUD, Start/End auctions, set thời gian  |
+| Quản lý Người Dùng | `/admin/users`    | Quản lý users, ban/unban, cập nhật số dư |
 
 ---
 
@@ -371,41 +412,232 @@ auction-system/
 - `POST /api/auth/register` - Đăng ký user mới
 - `POST /api/auth/login` - Đăng nhập (Spring Security)
 - `POST /api/auth/logout` - Đăng xuất
+- `GET /api/auth/profile` - Lấy thông tin user hiện tại
 
 ### **Auctions:**
 
-- `GET /api/auctions` - Lấy danh sách đấu giá active
+- `GET /api/auctions` - Lấy danh sách đấu giá **ACTIVE và PENDING**
 - `GET /api/auctions/{id}` - Lấy chi tiết đấu giá
-- `GET /api/auctions/search?keyword=...` - Tìm kiếm
+- `GET /api/auctions/search?keyword=...` - Tìm kiếm đấu giá
 
 ### **Bidding:**
 
-- `POST /api/bids` - Đặt giá
-- `GET /api/bids/auction/{auctionId}` - Lấy lịch sử bid
-- `GET /api/bids/user?userId=...` - Lấy bids của user
-
-### **Auto Bid:**
-
-- `POST /api/autobids` - Tạo auto bid
-- `GET /api/autobids/auction/{auctionId}` - Lấy auto bid
-- `DELETE /api/autobids/{id}` - Hủy auto bid
+- `POST /api/bids?userId={userId}` - Đặt giá
+  ```json
+  {
+    "auctionId": 1,
+    "bidAmount": 5000000
+  }
+  ```
+- `GET /api/bids/auction/{auctionId}` - Lấy lịch sử bid của auction
+- `GET /api/bids/user?userId={userId}` - Lấy bids của user
 
 ### **Watchlist:**
 
-- `POST /api/watchlist` - Thêm vào watchlist
-- `GET /api/watchlist/user?userId=...` - Lấy watchlist
-- `DELETE /api/watchlist/{id}` - Xóa khỏi watchlist
+- `POST /api/watchlist?userId={userId}&auctionId={auctionId}` - Thêm vào watchlist
+- `GET /api/watchlist/user?userId={userId}` - Lấy watchlist của user
+- `DELETE /api/watchlist/{id}` - Xóa khỏi watchlist (từ trang watchlist)
+- `DELETE /api/watchlist/auction/{auctionId}?userId={userId}` - Xóa khỏi watchlist (từ auction detail)
+- `GET /api/watchlist/check?userId={userId}&auctionId={auctionId}` - Kiểm tra đã thêm chưa
 
-### **Admin:**
+### **Admin Auctions:**
 
 - `POST /api/admin/auctions` - Tạo đấu giá mới
+  ```
+  title, description, startingPrice, startTime, endTime, imageUrl
+  ```
 - `PUT /api/admin/auctions/{id}` - Cập nhật đấu giá
 - `DELETE /api/admin/auctions/{id}` - Xóa đấu giá
-- `POST /api/admin/auctions/{id}/start` - Bắt đầu đấu giá
-- `POST /api/admin/auctions/{id}/end` - Kết thúc đấu giá
-- `GET /api/admin/users` - Lấy danh sách users
+- `POST /api/admin/auctions/{id}/start` - **Bắt đầu đấu giá thủ công**
+- `POST /api/admin/auctions/{id}/end` - **Kết thúc đấu giá thủ công**
+- `GET /api/admin/auctions/all` - Lấy tất cả auctions (bao gồm ENDED)
+
+### **Admin Users:**
+
+- `GET /api/admin/users` - Lấy danh sách tất cả users
 - `POST /api/admin/users/{id}/toggle-status` - Ban/Unban user
-- `POST /api/admin/users/{id}/update-balance` - Cập nhật số dư
+- `POST /api/admin/users/{id}/update-balance?amount={amount}` - Cập nhật số dư
+
+### **Admin Statistics:**
+
+- `GET /api/admin/statistics` - Lấy thống kê hệ thống
+
+---
+
+## 🎯 Tính Năng Nổi Bật
+
+### 1. **Real-time Bidding với WebSocket**
+
+**Mô tả:**
+
+- Sử dụng WebSocket (SockJS + STOMP) để giao tiếp real-time
+- Tất cả users đang xem auction sẽ nhận update ngay lập tức
+- Không cần refresh trang
+
+**Các events được broadcast:**
+
+- `BID_UPDATE`: Khi có người đặt giá mới
+- `AUCTION_EXTENDED`: Khi đấu giá được gia hạn (bid trong 60s cuối)
+- `AUCTION_STARTED`: Khi đấu giá bắt đầu
+- `AUCTION_ENDED`: Khi đấu giá kết thúc
+
+**WebSocket Endpoints:**
+
+```javascript
+// Subscribe to specific auction
+stompClient.subscribe("/topic/auction/{auctionId}", callback);
+
+// Subscribe to all auctions (for dashboard)
+stompClient.subscribe("/topic/auctions", callback);
+```
+
+---
+
+### 2. **Auction Scheduling System** 🆕
+
+**Mô tả:**
+Hệ thống lên lịch tự động quản lý vòng đời của auctions:
+
+#### **a) Manual Start by Admin:**
+
+- Admin có thể thiết lập `startTime` và `endTime` khi tạo auction
+- Status ban đầu: `PENDING`
+- Admin click nút **"Start"** để bắt đầu ngay lập tức
+
+#### **b) Auto Start:**
+
+- `AuctionSchedulerService` chạy mỗi **30 giây** (có thể điều chỉnh)
+- Tự động tìm các PENDING auctions đã đến `startTime`
+- Chuyển status → `ACTIVE`
+- Broadcast thông báo đến tất cả clients
+
+#### **c) Auto End - Time Expired:**
+
+- Tự động kết thúc khi `LocalDateTime.now() > endTime`
+- Chuyển status → `ENDED`
+
+#### **d) Smart End - No Activity:** ⚡
+
+- Track `lastBidTime` mỗi khi có bid mới
+- Nếu không có bid trong **20 phút**, tự động kết thúc
+- Lý do: "Không có người tăng giá trong 20 phút"
+
+**Code Example:**
+
+```java
+@Scheduled(fixedRate = 30000) // 30 seconds
+public void checkAuctions() {
+    // Check và start PENDING auctions
+    // Check và end ACTIVE auctions (time expired hoặc no activity)
+}
+```
+
+---
+
+### 3. **Watchlist - Theo dõi Đấu Giá**
+
+**Mô tả:**
+
+- User có thể thêm bất kỳ auction nào vào watchlist
+- **Hỗ trợ cả PENDING auctions** - Theo dõi đấu giá sắp diễn ra
+- Dễ dàng quay lại và không bỏ lỡ
+
+**Tính năng:**
+
+- Thêm/Xóa khỏi watchlist
+- Hiển thị danh sách theo dõi với đầy đủ thông tin
+- Badge "Đã Theo Dõi" trên auction detail page
+- Toggle button để thêm/xóa
+
+---
+
+### 4. **PENDING Auctions Display** 🆕
+
+**Mô tả:**
+Dashboard hiển thị cả auctions **ACTIVE** và **PENDING**
+
+**Visual Differences:**
+
+**PENDING Card:**
+
+- 🏷️ Ribbon vàng "Sắp diễn ra" ở góc trên
+- 🟡 Border màu vàng (warning)
+- 🎨 Hình ảnh có opacity 85%
+- 📅 Hiển thị thời gian bắt đầu và kết thúc
+- 💬 Alert: "Chưa có ai đặt giá. Hãy theo dõi để không bỏ lỡ!"
+- 🔘 Nút: "Xem chi tiết & Theo dõi" (outline)
+
+**ACTIVE Card:**
+
+- 🟢 Badge "Đang diễn ra"
+- 💰 Giá hiện tại, người dẫn đầu
+- ⏱️ Countdown timer
+- 🔵 Nút: "Xem chi tiết & Đấu giá" (solid)
+
+**Detail Page:**
+
+- PENDING: Ẩn form đặt giá, hiển thị thời gian bắt đầu
+- ACTIVE: Hiển thị form đặt giá đầy đủ
+- Watchlist button luôn hiển thị
+
+---
+
+### 5. **Security & Authentication**
+
+**Mô tả:**
+
+- Password được mã hóa bằng **BCrypt**
+- Session management với Spring Security
+- Phân quyền rõ ràng: **USER** / **ADMIN**
+
+**Protected Routes:**
+
+- User pages: Yêu cầu authentication
+- Admin pages: Yêu cầu role `ADMIN`
+- API endpoints: Kiểm tra quyền tương ứng
+
+**Custom UserDetailsService:**
+
+```java
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+    // Load user from database và map sang Spring Security UserDetails
+}
+```
+
+---
+
+### 6. **Responsive UI với Bootstrap 5**
+
+**Mô tả:**
+
+- Giao diện đẹp, hiện đại
+- Hoạt động tốt trên mobile, tablet, desktop
+- Bootstrap Icons cho icons
+- Sticky header với shrink effect
+- Sticky sidebar cho bidding panel
+
+**CSS Features:**
+
+- Navbar shrink on scroll
+- Sticky sidebar (auction detail)
+- Ribbon effect cho PENDING cards
+- Smooth transitions
+
+---
+
+### 7. **Bid Extension System**
+
+**Mô tả:**
+
+- Nếu có bid trong **60 giây cuối**, auction được gia hạn thêm **60 giây**
+- Tối đa gia hạn **3 lần** (có thể điều chỉnh)
+- Broadcast thông báo: "⏰ Đấu giá được gia hạn thêm 60 giây!"
+
+**Lý do:**
+
+- Tránh "sniping" (đặt giá vào giây cuối)
+- Đảm bảo công bằng cho tất cả người đấu giá
 
 ---
 
@@ -422,11 +654,26 @@ server.port=8081
 
 - Kiểm tra password MySQL trong `application.properties`
 - Đảm bảo MySQL đang chạy
+- Thử reset password MySQL
+
+```bash
+# Windows
+net start MySQL80
+
+# Linux/macOS
+sudo systemctl start mysql
+```
 
 ### **Lỗi: Table doesn't exist**
 
 - Kiểm tra `spring.jpa.hibernate.ddl-auto=update` trong `application.properties`
 - Database sẽ tự động tạo tables khi chạy lần đầu
+- Nếu vẫn lỗi, xóa database và tạo lại:
+
+```sql
+DROP DATABASE IF EXISTS auction_db;
+CREATE DATABASE auction_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
 ### **Lỗi: Java version**
 
@@ -435,6 +682,7 @@ server.port=8081
 java -version
 
 # Phải là Java 17 trở lên
+# Nếu sai version, cài lại JDK 17
 ```
 
 ### **Lỗi: Maven command not found**
@@ -444,7 +692,26 @@ java -version
 mvn -version
 
 # Kiểm tra PATH environment variable
+echo %PATH% # Windows
+echo $PATH  # Linux/macOS
 ```
+
+### **Lỗi: WebSocket connection failed**
+
+- Kiểm tra firewall không block port 8080
+- Kiểm tra browser hỗ trợ WebSocket
+- Kiểm tra console log:
+
+```javascript
+// Trong browser console
+// Nên thấy: "Connected to WebSocket"
+```
+
+### **Lỗi: Scheduled tasks không chạy**
+
+- Kiểm tra `@EnableScheduling` trong `AuctionSystemApplication.java`
+- Kiểm tra log console có thông báo auto-start/end không
+- Điều chỉnh `fixedRate` trong `AuctionSchedulerService.java` nếu cần
 
 ---
 
@@ -453,41 +720,94 @@ mvn -version
 - [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
 - [Spring Security](https://docs.spring.io/spring-security/reference/index.html)
 - [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
+- [Spring Scheduling](https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#scheduling)
 - [Thymeleaf](https://www.thymeleaf.org/documentation.html)
 - [Bootstrap 5](https://getbootstrap.com/docs/5.3/)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
 - [WebSocket với Spring](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#websocket)
+- [SockJS Client](https://github.com/sockjs/sockjs-client)
+- [STOMP Protocol](https://stomp.github.io/)
 
 ---
 
-## 🎯 Các Tính Năng Nổi Bật
+## 🚦 Workflow Đấu Giá
 
-### 1. **Real-time Bidding**
+### **Từ Admin:**
 
-- Sử dụng WebSocket (SockJS + STOMP)
-- Cập nhật giá ngay lập tức cho tất cả users đang xem
-- Không cần refresh trang
+1. **Tạo Auction:**
 
-### 2. **Auto Bid (Đặt giá tự động)**
+   - Login admin → Vào `/admin/auctions`
+   - Click "Tạo Đấu Giá Mới"
+   - Nhập: Title, Description, Giá khởi điểm
+   - Chọn thời gian bắt đầu và kết thúc (hoặc nhập số phút)
+   - Submit → Auction status: `PENDING`
 
-- User set giá tối đa và bước tăng
-- Hệ thống tự động đặt giá khi bị vượt
-- Tiết kiệm thời gian theo dõi
+2. **Start Auction:**
 
-### 3. **Watchlist**
+   - **Option 1:** Click nút "Start" ngay lập tức
+   - **Option 2:** Đợi hệ thống tự động start khi đến `startTime`
 
-- Lưu các đấu giá quan tâm
-- Dễ dàng theo dõi và quay lại
+3. **Monitor:**
+   - Xem real-time updates
+   - Kết thúc bất cứ lúc nào nếu cần (nút "End")
 
-### 4. **Security**
+### **Từ User:**
 
-- Password mã hóa BCrypt
-- Session management
-- Phân quyền rõ ràng (USER/ADMIN)
+1. **Xem Danh Sách:**
 
-### 5. **Responsive UI**
+   - Login user → Vào `/dashboard`
+   - Thấy cả ACTIVE và PENDING auctions
 
-- Bootstrap 5
-- Hoạt động tốt trên mobile, tablet, desktop
+2. **Theo Dõi PENDING:**
+
+   - Click vào PENDING auction
+   - Click "⭐ Thêm vào Danh Sách Theo Dõi"
+   - Đợi auction bắt đầu
+
+3. **Đấu Giá:**
+
+   - Khi auction ACTIVE, click "Xem chi tiết & Đấu giá"
+   - Nhập số tiền, click "Đặt Giá Ngay"
+   - Xem real-time updates
+
+4. **Kết Thúc:**
+   - Auction tự động kết thúc khi:
+     - Hết thời gian
+     - Hoặc 20 phút không có bid
+   - Nhận thông báo người thắng
+
+---
+
+## 📊 Database Schema
+
+### **Các bảng chính:**
+
+- `users` - Thông tin người dùng
+- `auctions` - Thông tin đấu giá (có `last_bid_time`)
+- `bids` - Lịch sử đặt giá
+- `watchlist` - Danh sách theo dõi
+
+### **Quan hệ:**
+
+```
+User (1) -----> (N) Auction (created_by)
+User (1) -----> (N) Bid
+User (1) -----> (N) Watchlist
+Auction (1) --> (N) Bid
+Auction (1) --> (N) Watchlist
+```
+
+---
+
+## 🎨 Screenshots Gợi Ý
+
+_(Có thể thêm screenshots của các trang sau:)_
+
+1. Dashboard với PENDING và ACTIVE auctions
+2. Admin tạo auction với datetime picker
+3. Auction detail page cho PENDING auction
+4. Real-time bidding với WebSocket
+5. Admin panel với nút Start/End
 
 ---
 
@@ -497,17 +817,73 @@ This project is for educational purposes.
 
 ---
 
-## 👨‍💻 Support
+## 👨‍💻 Support & Contact
 
 Nếu gặp vấn đề, hãy kiểm tra:
 
-1. Java version (phải >= 17)
-2. MySQL đang chạy
-3. Database `auction_db` đã được tạo
-4. Port 8080 không bị chiếm bởi app khác
+1. ✅ Java version (phải >= 17)
+2. ✅ MySQL đang chạy
+3. ✅ Database `auction_db` đã được tạo
+4. ✅ Port 8080 không bị chiếm bởi app khác
+5. ✅ Dependencies đã được Maven download
+
+**Debug Steps:**
+
+```bash
+# 1. Kiểm tra Java
+java -version
+
+# 2. Kiểm tra Maven
+mvn -version
+
+# 3. Kiểm tra MySQL
+mysql -u root -p
+
+# 4. Rebuild project
+mvn clean install -DskipTests
+
+# 5. Chạy với log verbose
+mvn spring-boot:run -X
+```
+
+---
+
+## 🎓 Kiến Thức Học Được
+
+Project này cover các khái niệm quan trọng trong Java Spring Boot:
+
+- ✅ **Spring Boot REST API**
+- ✅ **Spring Security với BCrypt**
+- ✅ **Spring Data JPA/Hibernate**
+- ✅ **WebSocket Real-time Communication**
+- ✅ **Spring Scheduler (@Scheduled)**
+- ✅ **Thymeleaf Template Engine**
+- ✅ **Repository Pattern**
+- ✅ **Service Layer Architecture**
+- ✅ **DTO Pattern**
+- ✅ **Session Management**
+- ✅ **Role-based Authorization**
 
 ---
 
 ## 🚀 Happy Coding!
 
 **Developed with ❤️ using Spring Boot**
+
+### **Author Notes:**
+
+Hệ thống này được thiết kế để demo các tính năng hiện đại của Spring Boot:
+
+- Real-time với WebSocket
+- Scheduling với Spring Scheduler
+- Security với Spring Security
+- Clean Architecture với Service/Repository layers
+
+Hy vọng project này hữu ích cho việc học tập và nghiên cứu! 🎉
+
+---
+
+**Version:** 1.0.0  
+**Last Updated:** October 2025  
+**Spring Boot Version:** 3.2.0  
+**Java Version:** 17
