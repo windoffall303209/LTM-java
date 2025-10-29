@@ -357,6 +357,18 @@
           document.getElementById("totalBids").textContent = update.totalBids;
           secondsRemaining = update.timeLeft;
 
+          // Cập nhật giá đặt tối thiểu
+          if (update.minimumBid) {
+            document.getElementById("minimumBid").textContent =
+              new Intl.NumberFormat("vi-VN").format(update.minimumBid) + " VND";
+            // Cập nhật giá trị mặc định trong input
+            const bidAmountInput = document.getElementById("bidAmount");
+            if (bidAmountInput) {
+              bidAmountInput.value = update.minimumBid;
+              bidAmountInput.setAttribute("min", update.minimumBid);
+            }
+          }
+
           showStatusMessage(
             "🔔 " + update.bidderName + " vừa đặt giá mới!",
             "warning"

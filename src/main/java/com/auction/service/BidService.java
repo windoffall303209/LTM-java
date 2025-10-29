@@ -7,6 +7,7 @@ import com.auction.model.User;
 import com.auction.repository.AuctionRepository;
 import com.auction.repository.BidRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +25,23 @@ import java.util.stream.Collectors;
  * Đây là phần QUAN TRỌNG NHẤT - Network Programming Core
  */
 @Service
-@RequiredArgsConstructor
 public class BidService {
 
     private final BidRepository bidRepository;
     private final AuctionRepository auctionRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final AutoBidService autoBidService;
+
+    // Constructor với @Lazy để tránh circular dependency
+    public BidService(BidRepository bidRepository, 
+                      AuctionRepository auctionRepository,
+                      SimpMessagingTemplate messagingTemplate,
+                      @Lazy AutoBidService autoBidService) {
+        this.bidRepository = bidRepository;
+        this.auctionRepository = auctionRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.autoBidService = autoBidService;
+    }
 
     /**
      * Đặt giá (CORE FUNCTION) - Manual bid
@@ -95,6 +107,16 @@ public class BidService {
         // 9. Broadcast bid update đến tất cả clients (REAL-TIME)
         broadcastBidUpdate(auction, user, bidAmount);
 
+        // 10. Kích hoạt auto bid cho những user khác (nếu không phải auto bid)
+        if (!isAutoBid) {
+            try {
+                autoBidService.processAutoBids(auction, bidAmount, user.getUserId());
+            } catch (Exception e) {
+                // Log lỗi nhưng không throw để không ảnh hưởng đến bid chính
+                System.err.println("Error processing auto bids: " + e.getMessage());
+            }
+        }
+
         return BidDTO.fromEntity(savedBid);
     }
 
@@ -108,6 +130,7 @@ public class BidService {
         update.put("auctionId", auction.getAuctionId());
         update.put("bidderName", bidder.getUsername());
         update.put("newPrice", newPrice);
+        update.put("minimumBid", auction.getMinimumBid());  // Thêm minimum bid mới
         update.put("timeLeft", auction.getSecondsRemaining());
         update.put("totalBids", auction.getTotalBids());
 
