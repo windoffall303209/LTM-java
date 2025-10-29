@@ -280,7 +280,7 @@ Hệ thống tự động tạo các tài khoản sau khi khởi động lần �
 ```
 Username: admin
 Password: admin
-Số dư: 100,000,000 VND
+Số dư: 2,000,000,000 VND (2 tỷ)
 Quyền: ADMIN (Toàn quyền quản trị)
 ```
 
@@ -289,19 +289,19 @@ Quyền: ADMIN (Toàn quyền quản trị)
 ```
 Username: user1
 Password: 123456
-Số dư: 20,000,000 VND
+Số dư: 2,000,000,000 VND (2 tỷ)
 Quyền: USER
 
 Username: user2
 Password: 123456
-Số dư: 15,000,000 VND
+Số dư: 2,000,000,000 VND (2 tỷ)
 Quyền: USER
 ```
 
 ### **Đăng ký tài khoản mới:**
 
 - Truy cập: http://localhost:8080/register
-- Tài khoản mới sẽ nhận **10,000,000 VND** ban đầu
+- Tài khoản mới sẽ nhận **2,000,000,000 VND (2 tỷ)** ban đầu
 
 ---
 

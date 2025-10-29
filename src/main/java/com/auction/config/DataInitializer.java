@@ -33,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setEmail("admin@auction.com");
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setFullName("Administrator");
-            admin.setBalance(new BigDecimal("100000000")); // 100 triệu VND
+            admin.setBalance(new BigDecimal("2000000000")); // 2 tỷ VND
             admin.setRole(User.Role.ADMIN);
             admin.setIsActive(true);
             
@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
             user1.setEmail("user1@auction.com");
             user1.setPassword(passwordEncoder.encode("123456"));
             user1.setFullName("Nguyễn Văn A");
-            user1.setBalance(new BigDecimal("20000000")); // 20 triệu VND
+            user1.setBalance(new BigDecimal("2000000000")); // 2 tỷ VND
             user1.setRole(User.Role.USER);
             user1.setIsActive(true);
             
@@ -64,7 +64,7 @@ public class DataInitializer implements CommandLineRunner {
             user2.setEmail("user2@auction.com");
             user2.setPassword(passwordEncoder.encode("123456"));
             user2.setFullName("Trần Thị B");
-            user2.setBalance(new BigDecimal("15000000")); // 15 triệu VND
+            user2.setBalance(new BigDecimal("2000000000")); // 2 tỷ VND
             user2.setRole(User.Role.USER);
             user2.setIsActive(true);
             

@@ -50,7 +50,7 @@ public class UserService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
-        user.setBalance(new BigDecimal("10000000")); // 10 triệu VND ban đầu
+        user.setBalance(new BigDecimal("2000000000")); // 2 tỷ VND ban đầu
         user.setRole(User.Role.USER);
         user.setIsActive(true);
 
