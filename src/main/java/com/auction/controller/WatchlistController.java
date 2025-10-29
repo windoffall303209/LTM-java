@@ -1,8 +1,8 @@
 package com.auction.controller;
 
 import com.auction.dto.ApiResponse;
+import com.auction.dto.WatchlistDTO;
 import com.auction.model.User;
-import com.auction.model.Watchlist;
 import com.auction.service.UserService;
 import com.auction.service.WatchlistService;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +28,12 @@ public class WatchlistController {
      * POST /api/watchlist
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<Watchlist>> addToWatchlist(
+    public ResponseEntity<ApiResponse<WatchlistDTO>> addToWatchlist(
             @RequestParam Long userId,
             @RequestParam Long auctionId) {
         try {
             User user = userService.findById(userId);
-            Watchlist watchlist = watchlistService.addToWatchlist(user, auctionId);
+            WatchlistDTO watchlist = watchlistService.addToWatchlist(user, auctionId);
             return ResponseEntity.ok(ApiResponse.success("Đã thêm vào watchlist!", watchlist));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -46,10 +46,10 @@ public class WatchlistController {
      * GET /api/watchlist/user
      */
     @GetMapping("/user")
-    public ResponseEntity<ApiResponse<List<Watchlist>>> getUserWatchlist(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse<List<WatchlistDTO>>> getUserWatchlist(@RequestParam Long userId) {
         try {
             User user = userService.findById(userId);
-            List<Watchlist> watchlist = watchlistService.getUserWatchlist(user);
+            List<WatchlistDTO> watchlist = watchlistService.getUserWatchlist(user);
             return ResponseEntity.ok(ApiResponse.success("Lấy danh sách thành công", watchlist));
         } catch (Exception e) {
             return ResponseEntity.badRequest()

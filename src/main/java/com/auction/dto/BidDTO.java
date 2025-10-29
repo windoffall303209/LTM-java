@@ -21,7 +21,6 @@ public class BidDTO {
     private String auctionTitle;
     private String username;
     private BigDecimal bidAmount;
-    private Boolean isAutoBid;
     private LocalDateTime bidTime;
     
     /**
@@ -34,7 +33,6 @@ public class BidDTO {
         dto.setAuctionTitle(bid.getAuction().getTitle());
         dto.setUsername(bid.getUser().getUsername());
         dto.setBidAmount(bid.getBidAmount());
-        dto.setIsAutoBid(bid.getIsAutoBid());
         dto.setBidTime(bid.getBidTime());
         return dto;
     }

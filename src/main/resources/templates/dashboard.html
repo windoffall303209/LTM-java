@@ -9,10 +9,62 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+      
+      .navbar.navbar-shrink {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+      
+      .navbar.navbar-shrink .navbar-brand {
+        font-size: 1rem;
+      }
+      
+      body {
+        padding-top: 70px;
+      }
+
+      /* Ribbon for pending auctions */
+      .ribbon-wrapper {
+        width: 85px;
+        height: 88px;
+        overflow: hidden;
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        z-index: 10;
+      }
+
+      .ribbon {
+        font-size: 11px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        transform: rotate(45deg);
+        position: relative;
+        padding: 7px 0;
+        left: -5px;
+        top: 15px;
+        width: 120px;
+        box-shadow: 0 4px 6px rgba(0,0,0,.1);
+      }
+
+      /* Card border for pending */
+      .card.border-warning {
+        border-width: 2px;
+      }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="mainNav">
       <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="/dashboard">🔨 Auction System</a>
         <button
@@ -29,7 +81,7 @@
               <a class="nav-link active fw-semibold" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-white fw-semibold" href="/my-bids">Lượt Đặt Giá</a>
+              <a class="nav-link text-white fw-semibold" href="/my-bids">Lịch Sử Đấu Giá</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white fw-semibold" href="/watchlist">Theo Dõi</a>
@@ -212,44 +264,62 @@
           auction.minimumBid
         );
 
+        // Kiểm tra trạng thái
+        const isPending = auction.status === "PENDING";
+        const statusBadge = isPending 
+          ? '<span class="badge bg-warning text-dark mb-2"><i class="bi bi-clock-history"></i> Sắp diễn ra</span>'
+          : '<span class="badge bg-success mb-2"><i class="bi bi-broadcast"></i> Đang diễn ra</span>';
+        
+        const cardBorder = isPending ? "border-warning" : "";
+        const startTimeText = isPending 
+          ? `<div class="mb-2"><strong>Bắt đầu lúc:</strong> <span class="text-primary">${new Date(auction.startTime).toLocaleString("vi-VN")}</span></div>`
+          : "";
+        
+        const buttonText = isPending ? "Xem chi tiết & Theo dõi" : "Xem chi tiết & Đấu giá";
+        const buttonClass = isPending ? "btn btn-outline-primary w-100" : "btn btn-primary w-100";
+
         return `
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="${imageUrl}" class="card-img-top" alt="${
-          auction.title
-        }" 
-                             style="height: 180px; object-fit: cover;">
+                    <div class="card h-100 shadow-sm ${cardBorder}">
+                        ${isPending ? '<div class="ribbon-wrapper"><div class="ribbon bg-warning text-dark">Sắp diễn ra</div></div>' : ''}
+                        <img src="${imageUrl}" class="card-img-top" alt="${auction.title}" 
+                             style="height: 180px; object-fit: cover; ${isPending ? 'opacity: 0.85;' : ''}">
                         <div class="card-body">
-                            <h5 class="card-title">${auction.title}</h5>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">${auction.title}</h5>
+                                ${statusBadge}
+                            </div>
                             <div class="mb-2">
-                                <strong>Giá hiện tại:</strong>
+                                <strong>${isPending ? 'Giá khởi điểm:' : 'Giá hiện tại:'}</strong>
                                 <div class="text-success fs-5">${priceFormatted} VND</div>
                             </div>
+                            ${!isPending ? `
                             <div class="mb-2">
                                 <small><strong>Giá tối thiểu:</strong> ${minBidFormatted} VND</small>
                             </div>
                             <div class="mb-2">
-                                <strong>Người dẫn đầu:</strong> ${
-                                  auction.highestBidder
-                                }
+                                <strong>Người dẫn đầu:</strong> ${auction.highestBidder}
                             </div>
                             <div class="mb-2">
-                                <strong>Thời gian:</strong>
-                                <span class="badge bg-danger">${formatTime(
-                                  auction.secondsRemaining
-                                )}</span>
+                                <strong>Thời gian còn lại:</strong>
+                                <span class="badge bg-danger">${formatTime(auction.secondsRemaining)}</span>
                             </div>
                             <div class="mb-2">
-                                <small class="text-muted">${
-                                  auction.totalBids
-                                } lượt đặt giá</small>
+                                <small class="text-muted">${auction.totalBids} lượt đặt giá</small>
                             </div>
+                            ` : `
+                            ${startTimeText}
+                            <div class="mb-2">
+                                <small class="text-muted"><i class="bi bi-calendar-event"></i> Kết thúc: ${new Date(auction.endTime).toLocaleString("vi-VN")}</small>
+                            </div>
+                            <div class="alert alert-info py-2 mb-2">
+                                <small><i class="bi bi-info-circle"></i> Chưa có ai đặt giá. Hãy theo dõi để không bỏ lỡ!</small>
+                            </div>
+                            `}
                         </div>
                         <div class="card-footer bg-transparent">
-                            <a href="/auction/${
-                              auction.auctionId
-                            }" class="btn btn-primary w-100">
-                                Xem chi tiết & Đấu giá
+                            <a href="/auction/${auction.auctionId}" class="${buttonClass}">
+                                ${buttonText}
                             </a>
                         </div>
                     </div>
@@ -268,6 +338,51 @@
       function applyFilters() {
         loadAuctions();
       }
+
+      // Navbar shrink on scroll
+      window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('mainNav');
+        if (window.scrollY > 50) {
+          navbar.classList.add('navbar-shrink');
+        } else {
+          navbar.classList.remove('navbar-shrink');
+        }
+      });
+
+      // WebSocket connection for real-time notifications
+      function connectWebSocket() {
+        const socket = new SockJS("/ws");
+        const stompClient = Stomp.over(socket);
+        
+        stompClient.connect({}, function (frame) {
+          console.log("Dashboard connected to WebSocket");
+          
+          // Subscribe to general auction updates
+          stompClient.subscribe("/topic/auctions", function (message) {
+            const update = JSON.parse(message.body);
+            
+            if (update.type === "AUCTION_STARTED") {
+              // Show toast notification
+              console.log("🚀 Đấu giá mới: " + update.title + " đã bắt đầu!");
+              // Reload auctions
+              loadAuctions();
+            } else if (update.type === "AUCTION_ENDED") {
+              // Show toast notification
+              const winnerMsg = update.winner ? " - Người thắng: " + update.winner : "";
+              console.log("🏁 Đấu giá " + update.title + " đã kết thúc!" + winnerMsg);
+              // Reload auctions
+              loadAuctions();
+            }
+          });
+        });
+      }
+
+      // Initialize
+      window.addEventListener("load", function() {
+        loadAuctions();
+        connectWebSocket();
+      });
     </script>
   </body>
 </html>
+

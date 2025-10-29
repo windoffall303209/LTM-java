@@ -45,9 +45,6 @@ public class Bid {
     @Column(name = "bid_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal bidAmount;
 
-    @Column(name = "is_auto_bid")
-    private Boolean isAutoBid = false;
-
     @CreationTimestamp
     @Column(name = "bid_time", nullable = false, updatable = false)
     private LocalDateTime bidTime;
@@ -57,14 +54,6 @@ public class Bid {
         this.auction = auction;
         this.user = user;
         this.bidAmount = bidAmount;
-        this.isAutoBid = false;
-    }
-
-    public Bid(Auction auction, User user, BigDecimal bidAmount, boolean isAutoBid) {
-        this.auction = auction;
-        this.user = user;
-        this.bidAmount = bidAmount;
-        this.isAutoBid = isAutoBid;
     }
 }
 

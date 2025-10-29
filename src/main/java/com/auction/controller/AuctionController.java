@@ -21,13 +21,13 @@ public class AuctionController {
     private final AuctionService auctionService;
 
     /**
-     * Lấy tất cả auctions đang active
+     * Lấy tất cả auctions đang active và pending
      * GET /api/auctions
      */
     @GetMapping
     public ResponseEntity<ApiResponse<List<AuctionDTO>>> getAllActiveAuctions() {
         try {
-            List<AuctionDTO> auctions = auctionService.getActiveAuctions();
+            List<AuctionDTO> auctions = auctionService.getActiveAndPendingAuctions();
             return ResponseEntity.ok(ApiResponse.success("Lấy danh sách thành công", auctions));
         } catch (Exception e) {
             return ResponseEntity.badRequest()

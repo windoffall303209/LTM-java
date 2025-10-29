@@ -133,10 +133,24 @@
                 <label class="form-label">Giá khởi điểm (VND) *</label>
                 <input type="number" class="form-control" id="startingPrice" required step="100000" />
               </div>
+              
               <div class="mb-3">
-                <label class="form-label">Thời gian (phút) *</label>
-                <input type="number" class="form-control" id="durationMinutes" required />
+                <label class="form-label">Thời gian bắt đầu *</label>
+                <input type="datetime-local" class="form-control" id="startTime" required />
+                <small class="text-muted">Để trống sẽ bắt đầu ngay</small>
               </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Thời gian kết thúc *</label>
+                <input type="datetime-local" class="form-control" id="endTime" required />
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Hoặc nhập thời gian (phút)</label>
+                <input type="number" class="form-control" id="durationMinutes" min="1" placeholder="Ví dụ: 60" />
+                <small class="text-muted">Nếu nhập, sẽ tự động tính từ thời gian bắt đầu</small>
+              </div>
+              
               <div class="mb-3">
                 <label class="form-label">Link hình ảnh</label>
                 <input type="text" class="form-control" id="imageUrl" placeholder="https://..." />
@@ -184,15 +198,62 @@
         });
       }
 
+      // Set default times when modal opens
+      document.getElementById("createAuctionModal").addEventListener("show.bs.modal", () => {
+        const now = new Date();
+        const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+        
+        // Format to datetime-local format
+        const formatDateTime = (date) => {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          const hours = String(date.getHours()).padStart(2, '0');
+          const minutes = String(date.getMinutes()).padStart(2, '0');
+          return `${year}-${month}-${day}T${hours}:${minutes}`;
+        };
+        
+        document.getElementById("startTime").value = formatDateTime(now);
+        document.getElementById("endTime").value = formatDateTime(oneHourLater);
+      });
+
+      // Auto-calculate endTime when durationMinutes changes
+      document.getElementById("durationMinutes").addEventListener("input", (e) => {
+        const duration = parseInt(e.target.value);
+        if (duration > 0) {
+          const startTime = new Date(document.getElementById("startTime").value);
+          const endTime = new Date(startTime.getTime() + duration * 60 * 1000);
+          
+          const formatDateTime = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+          };
+          
+          document.getElementById("endTime").value = formatDateTime(endTime);
+        }
+      });
+
       document.getElementById("createAuctionForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const data = new URLSearchParams({
           title: document.getElementById("title").value,
           description: document.getElementById("description").value,
           startingPrice: document.getElementById("startingPrice").value,
-          durationMinutes: document.getElementById("durationMinutes").value,
+          startTime: document.getElementById("startTime").value,
+          endTime: document.getElementById("endTime").value,
           imageUrl: document.getElementById("imageUrl").value,
         });
+        
+        // Add durationMinutes if provided
+        const duration = document.getElementById("durationMinutes").value;
+        if (duration) {
+          data.append("durationMinutes", duration);
+        }
+        
         const response = await fetch("/api/admin/auctions?" + data, { method: "POST" });
         const result = await response.json();
         if (result.success) {

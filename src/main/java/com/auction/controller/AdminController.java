@@ -39,7 +39,9 @@ public class AdminController {
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam BigDecimal startingPrice,
-            @RequestParam Integer durationMinutes,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
+            @RequestParam(required = false) Integer durationMinutes,
             @RequestParam(required = false) String imageUrl) {
         try {
             Auction auction = new Auction();
@@ -47,14 +49,32 @@ public class AdminController {
             auction.setDescription(description);
             auction.setStartingPrice(startingPrice);
             auction.setCurrentPrice(startingPrice);
-            auction.setDurationMinutes(durationMinutes);
             auction.setImageUrl(imageUrl);
             auction.setStatus(Auction.AuctionStatus.PENDING);
             
-            // Set thời gian - sẽ được set khi start auction
-            LocalDateTime now = LocalDateTime.now();
-            auction.setStartTime(now);
-            auction.setEndTime(now.plusMinutes(durationMinutes));
+            // Set thời gian
+            LocalDateTime start;
+            LocalDateTime end;
+            
+            if (startTime != null && !startTime.isEmpty()) {
+                // Parse from ISO datetime string (yyyy-MM-ddTHH:mm)
+                start = LocalDateTime.parse(startTime);
+            } else {
+                start = LocalDateTime.now();
+            }
+            
+            if (endTime != null && !endTime.isEmpty()) {
+                end = LocalDateTime.parse(endTime);
+            } else if (durationMinutes != null && durationMinutes > 0) {
+                end = start.plusMinutes(durationMinutes);
+            } else {
+                // Mặc định 60 phút
+                end = start.plusMinutes(60);
+            }
+            
+            auction.setStartTime(start);
+            auction.setEndTime(end);
+            auction.setDurationMinutes((int) java.time.Duration.between(start, end).toMinutes());
 
             Auction created = auctionService.createAuction(auction);
             return ResponseEntity.ok(ApiResponse.success("Tạo đấu giá thành công!", created));

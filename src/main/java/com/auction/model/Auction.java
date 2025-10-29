@@ -78,6 +78,9 @@ public class Auction {
     @Column(name = "duration_minutes")
     private Integer durationMinutes;
 
+    @Column(name = "last_bid_time")
+    private LocalDateTime lastBidTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
@@ -95,9 +98,6 @@ public class Auction {
     private List<Bid> bids = new ArrayList<>();
 
     @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AutoBid> autoBids = new HashSet<>();
-
-    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Watchlist> watchlists = new HashSet<>();
 
     // Business logic methods
@@ -106,6 +106,7 @@ public class Auction {
         this.currentPrice = bid.getBidAmount();
         this.highestBidder = bid.getUser();
         this.totalBids++;
+        this.lastBidTime = LocalDateTime.now(); // Track last bid time
     }
 
     public boolean isActive() {

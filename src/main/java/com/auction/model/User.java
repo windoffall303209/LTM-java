@@ -71,9 +71,6 @@ public class User {
     private Set<Bid> bids = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<AutoBid> autoBids = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Watchlist> watchlists = new HashSet<>();
 
     // Helper methods

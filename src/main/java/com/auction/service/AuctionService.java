@@ -103,6 +103,32 @@ public class AuctionService {
     }
 
     /**
+     * Lấy auctions ACTIVE và PENDING (cho user xem và theo dõi)
+     */
+    public List<AuctionDTO> getActiveAndPendingAuctions() {
+        List<Auction> activeAuctions = auctionRepository.findByStatus(Auction.AuctionStatus.ACTIVE);
+        List<Auction> pendingAuctions = auctionRepository.findByStatus(Auction.AuctionStatus.PENDING);
+        
+        // Merge two lists
+        activeAuctions.addAll(pendingAuctions);
+        
+        return activeAuctions.stream()
+                .map(AuctionDTO::fromEntity)
+                .sorted((a, b) -> {
+                    // ACTIVE trước, PENDING sau
+                    if (a.getStatus().equals("ACTIVE") && !b.getStatus().equals("ACTIVE")) {
+                        return -1;
+                    }
+                    if (!a.getStatus().equals("ACTIVE") && b.getStatus().equals("ACTIVE")) {
+                        return 1;
+                    }
+                    // Cùng status thì sắp xếp theo startTime
+                    return a.getStartTime().compareTo(b.getStartTime());
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Lấy tất cả auctions
      */
     public List<AuctionDTO> getAllAuctions() {

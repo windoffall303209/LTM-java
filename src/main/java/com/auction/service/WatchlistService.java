@@ -1,8 +1,10 @@
 package com.auction.service;
 
+import com.auction.dto.WatchlistDTO;
 import com.auction.model.Auction;
 import com.auction.model.User;
 import com.auction.model.Watchlist;
+import com.auction.repository.UserRepository;
 import com.auction.repository.WatchlistRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service: Watchlist
@@ -22,12 +25,13 @@ public class WatchlistService {
 
     private final WatchlistRepository watchlistRepository;
     private final AuctionService auctionService;
+    private final UserRepository userRepository;
 
     /**
      * Thêm auction vào watchlist
      */
     @Transactional
-    public Watchlist addToWatchlist(User user, Long auctionId) {
+    public WatchlistDTO addToWatchlist(User user, Long auctionId) {
         Auction auction = auctionService.getAuctionById(auctionId);
 
         // Kiểm tra đã tồn tại chưa
@@ -42,7 +46,7 @@ public class WatchlistService {
         Watchlist saved = watchlistRepository.save(watchlist);
         log.info("Added to watchlist: user={}, auction={}", user.getUsername(), auctionId);
 
-        return saved;
+        return WatchlistDTO.fromEntity(saved);
     }
 
     /**
@@ -66,20 +70,26 @@ public class WatchlistService {
      */
     @Transactional
     public void removeByAuctionId(Long userId, Long auctionId) {
-        User user = new User();
-        user.setUserId(userId);
-        
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
         Auction auction = auctionService.getAuctionById(auctionId);
         
         watchlistRepository.findByUserAndAuction(user, auction)
-                .ifPresent(watchlistRepository::delete);
+                .ifPresent(w -> {
+                    watchlistRepository.delete(w);
+                    log.info("Removed from watchlist by auctionId: user={}, auction={}", 
+                            user.getUsername(), auctionId);
+                });
     }
 
     /**
      * Lấy watchlist của user
      */
-    public List<Watchlist> getUserWatchlist(User user) {
-        return watchlistRepository.findByUserOrderByAddedAtDesc(user);
+    public List<WatchlistDTO> getUserWatchlist(User user) {
+        return watchlistRepository.findByUserOrderByAddedAtDesc(user)
+                .stream()
+                .map(WatchlistDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
