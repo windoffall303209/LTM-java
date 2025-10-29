@@ -71,7 +71,15 @@ public class ViewController {
      * My Bids
      */
     @GetMapping("/my-bids")
-    public String myBids() {
+    public String myBids(Model model) {
+        // Lấy thông tin user đã đăng nhập
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            String username = auth.getName();
+            User user = userService.findByUsername(username);
+            model.addAttribute("currentUser", user);
+            model.addAttribute("isAdmin", user.getRole() == User.Role.ADMIN);
+        }
         return "my-bids";
     }
 
@@ -79,7 +87,15 @@ public class ViewController {
      * Watchlist
      */
     @GetMapping("/watchlist")
-    public String watchlist() {
+    public String watchlist(Model model) {
+        // Lấy thông tin user đã đăng nhập
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            String username = auth.getName();
+            User user = userService.findByUsername(username);
+            model.addAttribute("currentUser", user);
+            model.addAttribute("isAdmin", user.getRole() == User.Role.ADMIN);
+        }
         return "watchlist";
     }
 

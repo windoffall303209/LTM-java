@@ -8,6 +8,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <style>
       .bid-card {
         transition: transform 0.2s;
@@ -49,33 +50,64 @@
               <a class="nav-link text-white fw-semibold" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active fw-semibold" href="/my-bids">Lịch Sử Đấu Giá</a>
+              <a class="nav-link active fw-semibold" href="/my-bids">Lượt Đặt Giá</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-white fw-semibold" href="/watchlist">Theo Dõi</a>
             </li>
+            <!-- Admin Menu -->
+            <li class="nav-item" th:if="${isAdmin}">
+              <a class="nav-link text-warning fw-bold" href="/admin">
+                👑 Quản Trị
+              </a>
+            </li>
           </ul>
           <ul class="navbar-nav">
-            <li class="nav-item">
-              <span class="nav-link" id="userBalance">
-                💰 <strong>0 VND</strong>
+            <!-- User Balance -->
+            <li class="nav-item d-none d-lg-block">
+              <span class="nav-link">
+                💰 <strong th:text="${#numbers.formatDecimal(currentUser.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">10,000,000 VND</strong>
               </span>
             </li>
-            <li class="nav-item">
-              <span class="nav-link" id="userInfo">
-                👤 <strong>User</strong>
-              </span>
-            </li>
-            <li class="nav-item">
-              <form
-                method="POST"
-                th:action="@{/api/auth/logout}"
-                style="display: inline"
-              >
-                <button type="submit" class="btn btn-outline-light btn-sm">
-                  Đăng xuất
-                </button>
-              </form>
+            <!-- Username with Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                👤 <strong th:text="${currentUser.username}">User</strong>
+                <span th:if="${isAdmin}" class="badge bg-warning text-dark ms-1">ADMIN</span>
+                <span th:unless="${isAdmin}" class="badge bg-info ms-1">USER</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li class="dropdown-header">
+                  <strong>Thông tin tài khoản</strong>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <span class="dropdown-item-text">
+                    <small class="text-muted">Tên đầy đủ:</small><br/>
+                    <strong th:text="${currentUser.fullName}">Full Name</strong>
+                  </span>
+                </li>
+                <li>
+                  <span class="dropdown-item-text">
+                    <small class="text-muted">Email:</small><br/>
+                    <strong th:text="${currentUser.email}">email@example.com</strong>
+                  </span>
+                </li>
+                <li>
+                  <span class="dropdown-item-text">
+                    <small class="text-muted">Số dư:</small><br/>
+                    <strong class="text-success" th:text="${#numbers.formatDecimal(currentUser.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</strong>
+                  </span>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="POST" th:action="@{/api/auth/logout}" class="px-2">
+                    <button type="submit" class="btn btn-danger btn-sm w-100">
+                      <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                    </button>
+                  </form>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
