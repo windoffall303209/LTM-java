@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Nhập - Auction System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+      .login-card {
+        max-width: 450px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card login-card">
+            <div class="card-body p-5">
+              <div class="text-center mb-4">
+                <h2 class="fw-bold">🔨 Auction System</h2>
+                <p class="text-muted">Đăng nhập vào hệ thống</p>
+              </div>
+
+              <!-- Error Message -->
+              <div
+                th:if="${param.error}"
+                class="alert alert-danger"
+                role="alert"
+              >
+                <strong>Lỗi!</strong> Username hoặc password không đúng.
+              </div>
+
+              <!-- Logout Message -->
+              <div
+                th:if="${param.logout}"
+                class="alert alert-success"
+                role="alert"
+              >
+                Bạn đã đăng xuất thành công!
+              </div>
+
+              <!-- Login Form -->
+              <form method="POST" th:action="@{/api/auth/login}">
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    id="username"
+                    name="username"
+                    required
+                    placeholder="Nhập username"
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control form-control-lg"
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="Nhập password"
+                  />
+                </div>
+
+                <div class="mb-3 form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="rememberMe"
+                    name="remember-me"
+                  />
+                  <label class="form-check-label" for="rememberMe">
+                    Ghi nhớ đăng nhập
+                  </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                  Đăng nhập
+                </button>
+
+                <div class="text-center">
+                  <p class="mb-0">
+                    Chưa có tài khoản?
+                    <a href="/register" class="text-decoration-none fw-bold"
+                      >Đăng ký ngay</a
+                    >
+                  </p>
+                  <a href="/" class="text-muted small">← Quay về trang chủ</a>
+                </div>
+              </form>
+
+              <!-- Demo Account Info -->
+              <div class="alert alert-info mt-4" role="alert">
+                <strong>Demo Account:</strong><br />
+                Username: <code>admin</code> | Password: <code>admin</code
+                ><br />
+                <small class="text-muted">Hoặc đăng ký tài khoản mới</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auction System - Trang Chủ</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container">
+        <a class="navbar-brand" href="/">🔨 Auction System</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Đăng nhập</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-light text-primary ms-2"
+                href="/register"
+                >Đăng ký</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero bg-light py-5">
+      <div class="container text-center">
+        <h1 class="display-4 fw-bold">Hệ Thống Đấu Giá Trực Tuyến</h1>
+        <p class="lead text-muted">
+          Đấu giá minh bạch, real-time với công nghệ WebSocket
+        </p>
+        <div class="mt-4">
+          <a href="/register" class="btn btn-primary btn-lg me-2"
+            >Bắt đầu ngay</a
+          >
+          <a href="#auctions" class="btn btn-outline-primary btn-lg"
+            >Xem đấu giá</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Auctions -->
+    <section id="auctions" class="py-5">
+      <div class="container">
+        <h2 class="text-center mb-4">Đấu Giá Đang Diễn Ra</h2>
+        <div class="row g-4">
+          <div class="col-md-4" th:each="auction : ${auctions}">
+            <div class="card h-100 shadow-sm">
+              <img
+                th:src="${auction.imageUrl != null ? auction.imageUrl : 'https://via.placeholder.com/400x300'}"
+                class="card-img-top"
+                alt="Auction Image"
+                style="height: 200px; object-fit: cover"
+              />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${auction.title}">
+                  Auction Title
+                </h5>
+                <p
+                  class="card-text text-muted"
+                  th:text="${#strings.abbreviate(auction.description, 80)}"
+                >
+                  Description...
+                </p>
+                <div class="mb-2">
+                  <strong>Giá hiện tại:</strong>
+                  <span
+                    class="text-success fs-5"
+                    th:text="${#numbers.formatDecimal(auction.currentPrice, 0, 'COMMA', 0, 'POINT')} + ' VND'"
+                  >
+                    0 VND
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <strong>Người dẫn đầu:</strong>
+                  <span th:text="${auction.highestBidder}">Chưa có</span>
+                </div>
+                <div class="mb-3">
+                  <strong>Thời gian còn lại:</strong>
+                  <span
+                    class="badge bg-danger"
+                    th:text="${auction.secondsRemaining} + ' giây'"
+                    >0 giây</span
+                  >
+                </div>
+                <div class="mb-2">
+                  <small class="text-muted">
+                    <i class="bi bi-person-fill"></i>
+                    <span th:text="${auction.totalBids}">0</span> lượt đặt giá
+                  </small>
+                </div>
+              </div>
+              <div class="card-footer bg-transparent">
+                <a th:href="@{/login}" class="btn btn-primary w-100">
+                  Đăng nhập để đấu giá
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Auctions Message -->
+        <div th:if="${#lists.isEmpty(auctions)}" class="text-center py-5">
+          <h4 class="text-muted">Hiện không có đấu giá nào đang diễn ra</h4>
+          <p>Vui lòng quay lại sau!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container">
+        <p class="mb-0">
+          &copy; 2025 Auction System - Network Programming Project
+        </p>
+        <p class="small text-muted">
+          Developed with Spring Boot + WebSocket + Thymeleaf
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
