@@ -20,6 +20,7 @@ public class BidDTO {
     private Long auctionId;
     private String auctionTitle;
     private String username;
+    private String fullName;
     private BigDecimal bidAmount;
     private LocalDateTime bidTime;
     
@@ -32,6 +33,7 @@ public class BidDTO {
         dto.setAuctionId(bid.getAuction().getAuctionId());
         dto.setAuctionTitle(bid.getAuction().getTitle());
         dto.setUsername(bid.getUser().getUsername());
+        dto.setFullName(bid.getUser().getFullName());
         dto.setBidAmount(bid.getBidAmount());
         dto.setBidTime(bid.getBidTime());
         return dto;

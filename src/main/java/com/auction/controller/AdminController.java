@@ -8,12 +8,15 @@ import com.auction.service.AuctionService;
 import com.auction.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller: Admin
@@ -27,6 +30,7 @@ public class AdminController {
 
     private final AuctionService auctionService;
     private final UserService userService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     // ==================== AUCTION MANAGEMENT ====================
 
@@ -77,6 +81,10 @@ public class AdminController {
             auction.setDurationMinutes((int) java.time.Duration.between(start, end).toMinutes());
 
             Auction created = auctionService.createAuction(auction);
+            
+            // Broadcast auction created event
+            broadcastAuctionCreated(created);
+            
             return ResponseEntity.ok(ApiResponse.success("Tạo đấu giá thành công!", created));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -255,6 +263,22 @@ public class AdminController {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error(e.getMessage()));
         }
+    }
+
+    // ==================== HELPER METHODS ====================
+
+    /**
+     * Broadcast auction created event qua WebSocket
+     */
+    private void broadcastAuctionCreated(Auction auction) {
+        Map<String, Object> message = new HashMap<>();
+        message.put("type", "AUCTION_CREATED");
+        message.put("auctionId", auction.getAuctionId());
+        message.put("title", auction.getTitle());
+        message.put("status", auction.getStatus().toString());
+        message.put("startTime", auction.getStartTime());
+
+        messagingTemplate.convertAndSend("/topic/auctions", message);
     }
 }
 

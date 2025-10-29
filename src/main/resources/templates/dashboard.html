@@ -96,14 +96,14 @@
           <ul class="navbar-nav">
             <!-- User Balance -->
             <li class="nav-item d-none d-lg-block">
-              <span class="nav-link">
-                💰 <strong th:text="${#numbers.formatDecimal(currentUser.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">10,000,000 VND</strong>
+              <span class="nav-link text-white">
+                <strong>💰 <span th:text="${#numbers.formatDecimal(currentUser.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">10,000,000 VND</span></strong>
               </span>
             </li>
             <!-- Username with Dropdown -->
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                👤 <strong th:text="${currentUser.username}">User</strong>
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <strong>👤 <span th:text="${currentUser.fullName != null && !currentUser.fullName.isEmpty() ? currentUser.fullName : currentUser.username}">User</span></strong>
                 <span th:if="${isAdmin}" class="badge bg-warning text-dark ms-1">ADMIN</span>
                 <span th:unless="${isAdmin}" class="badge bg-info ms-1">USER</span>
               </a>
@@ -215,10 +215,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
     <script>
-      // Load auctions on page load
-      window.addEventListener("load", loadAuctions);
-
       async function loadAuctions() {
         try {
           const response = await fetch("/api/auctions");
@@ -351,30 +350,49 @@
 
       // WebSocket connection for real-time notifications
       function connectWebSocket() {
-        const socket = new SockJS("/ws");
-        const stompClient = Stomp.over(socket);
-        
-        stompClient.connect({}, function (frame) {
-          console.log("Dashboard connected to WebSocket");
+        try {
+          const socket = new SockJS("/ws");
+          const stompClient = Stomp.over(socket);
           
-          // Subscribe to general auction updates
-          stompClient.subscribe("/topic/auctions", function (message) {
-            const update = JSON.parse(message.body);
+          // Disable debug logging in production
+          stompClient.debug = null;
+          
+          stompClient.connect({}, function (frame) {
+            console.log("✅ Dashboard connected to WebSocket");
             
-            if (update.type === "AUCTION_STARTED") {
-              // Show toast notification
-              console.log("🚀 Đấu giá mới: " + update.title + " đã bắt đầu!");
-              // Reload auctions
-              loadAuctions();
-            } else if (update.type === "AUCTION_ENDED") {
-              // Show toast notification
-              const winnerMsg = update.winner ? " - Người thắng: " + update.winner : "";
-              console.log("🏁 Đấu giá " + update.title + " đã kết thúc!" + winnerMsg);
-              // Reload auctions
-              loadAuctions();
-            }
+            // Subscribe to general auction updates
+            stompClient.subscribe("/topic/auctions", function (message) {
+              try {
+                const update = JSON.parse(message.body);
+                console.log("📩 Received WebSocket message:", update.type);
+                
+                if (update.type === "AUCTION_CREATED") {
+                  // Auction mới được tạo
+                  console.log("🆕 Đấu giá mới: " + update.title + " đã được tạo!");
+                  // Reload auctions
+                  loadAuctions();
+                } else if (update.type === "AUCTION_STARTED") {
+                  // Show toast notification
+                  console.log("🚀 Đấu giá: " + update.title + " đã bắt đầu!");
+                  // Reload auctions
+                  loadAuctions();
+                } else if (update.type === "AUCTION_ENDED") {
+                  // Show toast notification
+                  const winnerMsg = update.winner ? " - Người thắng: " + update.winner : "";
+                  console.log("🏁 Đấu giá " + update.title + " đã kết thúc!" + winnerMsg);
+                  // Reload auctions
+                  loadAuctions();
+                }
+              } catch (error) {
+                console.error("❌ Error parsing WebSocket message:", error);
+              }
+            });
+          }, function (error) {
+            console.error("❌ WebSocket connection error:", error);
           });
-        });
+        } catch (error) {
+          console.error("❌ Error creating WebSocket:", error);
+        }
       }
 
       // Initialize
