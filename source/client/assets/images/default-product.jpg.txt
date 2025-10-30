@@ -1,0 +1,11 @@
+Placeholder for default product image.
+
+Add your product images here:
+- default-product.jpg
+- iphone15.jpg
+- macbook.jpg
+- etc.
+
+Recommended size: 800x600px
+Format: JPG or PNG
+

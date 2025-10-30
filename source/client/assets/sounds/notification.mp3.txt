@@ -1,0 +1,8 @@
+Placeholder for notification sound.
+
+Add notification.mp3 file here for audio alerts.
+
+You can use free sounds from:
+- https://freesound.org/
+- https://mixkit.co/free-sound-effects/
+

@@ -1,0 +1,338 @@
+/* ================================================
+   AUCTION SYSTEM - CUSTOM STYLES
+   ================================================ */
+
+/* ========== GLOBAL ========== */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --dark-color: #212529;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* ========== LANDING PAGE ========== */
+.landing-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section h1 {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ========== CARDS ========== */
+.card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* ========== AUCTION LIST ========== */
+.auction-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 15px;
+    border-left: 4px solid transparent;
+}
+
+.auction-item:hover {
+    background-color: #f8f9fa;
+}
+
+.auction-item.active {
+    background-color: #e7f1ff;
+    border-left-color: var(--primary-color);
+}
+
+.auction-item.ending-soon {
+    border-left-color: var(--danger-color);
+    background-color: #fff3cd;
+}
+
+.auction-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.auction-timer {
+    font-size: 0.9rem;
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+.auction-winner {
+    font-size: 0.85rem;
+    color: var(--success-color);
+}
+
+/* ========== BID HISTORY ========== */
+.bid-item {
+    padding: 10px;
+    border-left: 3px solid #e9ecef;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.bid-item:hover {
+    background-color: #e9ecef;
+    border-left-color: var(--primary-color);
+}
+
+.bid-item.my-bid {
+    background-color: #d1ecf1;
+    border-left-color: var(--info-color);
+}
+
+.bid-item.winning-bid {
+    background-color: #d4edda;
+    border-left-color: var(--success-color);
+}
+
+/* ========== CONNECTION INDICATOR ========== */
+#connectionIndicator {
+    font-size: 10px;
+    animation: pulse 2s infinite;
+}
+
+#connectionIndicator.connected {
+    color: #198754;
+}
+
+#connectionIndicator.disconnected {
+    color: #dc3545;
+}
+
+#connectionIndicator.connecting {
+    color: #ffc107;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ========== PRICE DISPLAY ========== */
+.price-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* ========== COUNTDOWN TIMER ========== */
+.countdown-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.countdown-timer.warning {
+    color: var(--danger-color);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.5; }
+}
+
+/* ========== BADGE STYLES ========== */
+.badge-status {
+    padding: 0.5em 0.75em;
+    font-size: 0.85rem;
+}
+
+.status-active {
+    background-color: var(--success-color);
+}
+
+.status-ended {
+    background-color: var(--secondary-color);
+}
+
+.status-pending {
+    background-color: var(--warning-color);
+}
+
+/* ========== NOTIFICATION TOAST ========== */
+.toast {
+    min-width: 300px;
+}
+
+.toast-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.toast-error {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.toast-warning {
+    background-color: var(--warning-color);
+    color: black;
+}
+
+/* ========== LOADING STATES ========== */
+.skeleton {
+    animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+    0% { background-color: hsl(200, 20%, 80%); }
+    100% { background-color: hsl(200, 20%, 95%); }
+}
+
+/* ========== BUTTON STYLES ========== */
+.btn-quick-bid {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .price-display {
+        font-size: 1.8rem;
+    }
+    
+    .auction-item {
+        padding: 10px;
+    }
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ========== UTILITY CLASSES ========== */
+.text-monospace {
+    font-family: 'Courier New', monospace;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.user-select-none {
+    user-select: none;
+}
+
+/* ========== ADMIN PANEL ========== */
+.admin-stat-card {
+    border-left: 4px solid;
+}
+
+.admin-stat-card.primary {
+    border-left-color: var(--primary-color);
+}
+
+.admin-stat-card.success {
+    border-left-color: var(--success-color);
+}
+
+.admin-stat-card.warning {
+    border-left-color: var(--warning-color);
+}
+
+.admin-stat-card.danger {
+    border-left-color: var(--danger-color);
+}
+
+/* ========== PASSWORD STRENGTH ========== */
+.password-weak {
+    background-color: var(--danger-color);
+}
+
+.password-medium {
+    background-color: var(--warning-color);
+}
+
+.password-strong {
+    background-color: var(--success-color);
+}
+
+/* ========== HIGHLIGHT EFFECTS ========== */
+.highlight-new {
+    animation: highlightNew 2s ease-out;
+}
+
+@keyframes highlightNew {
+    0% { background-color: #fff3cd; }
+    100% { background-color: transparent; }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .navbar, .btn, .toast, footer {
+        display: none !important;
+    }
+}
+
