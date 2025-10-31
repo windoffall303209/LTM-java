@@ -1,374 +1,439 @@
-# 📋 KẾ HOẠCH PHÂN CHIA CÔNG VIỆC - 3 THÀNH VIÊN
+# 📋 KẾ HOẠCH PHÂN CHIA CÔNG VIỆC THEO MODULE - 3 THÀNH VIÊN
 
-## 👥 Phân Công Nhóm
+## 👥 Phân Công Nhóm (Theo Module)
 
-### **Thành Viên 1: Backend Core Developer**
-**Trách nhiệm:** Xây dựng nền tảng backend, database, và API cơ bản
+### **Thành Viên 1: Config & Admin Frontend**
+**Trách nhiệm:** 
+- Backend: Tất cả file config (Security, WebSocket, WebConfig, DataInitializer)
+- Frontend: 3 màn hình admin (admin/dashboard, admin/auctions, admin/users)
 
-### **Thành Viên 2: Backend Features Developer**  
-**Trách nhiệm:** Phát triển tính năng nâng cao, WebSocket, và tích hợp
+### **Thành Viên 2: Backend Modules & Basic Frontend**  
+**Trách nhiệm:** 
+- Backend: Các module (model, repository, service, controller theo module)
+- Frontend: 4 màn hình cơ bản (index, login, register, dashboard)
 
-### **Thành Viên 3: Frontend Developer**
-**Trách nhiệm:** Xây dựng giao diện người dùng và tích hợp với backend
+### **Thành Viên 3: Backend Modules & User Frontend**
+**Trách nhiệm:** 
+- Backend: Các module còn lại (model, repository, service, controller theo module)
+- Frontend: 3 màn hình user (watchlist, my-bids, auction-detail)
 
 ---
 
-## 📅 TIMELINE & COMMITS
+## 📅 TIMELINE & COMMITS (Module-Based)
 
-### **GIAI ĐOẠN 1: Khởi tạo dự án & Cấu trúc cơ bản** (3-4 commits)
+### **GIAI ĐOẠN 1: Khởi tạo dự án** (1 commit chung)
 
-#### Commit 1: [Thành viên 1] - Khởi tạo cấu trúc dự án
+#### Commit 1: [Tất cả cùng làm] - Khởi tạo sườn project
 **Thời gian:** Ngày 1  
 **Nội dung:**
 ```
-- Tạo cấu trúc thư mục: source/client, source/server
-- Thêm README.md chính với thông tin nhóm
-- Tạo .gitignore cho Java và Node.js
-- Thêm source/server/pom.xml với dependencies cơ bản:
-  * Spring Boot Starter Web
-  * Spring Boot Starter Data JPA
-  * MySQL Connector
-  * Lombok
-```
-**Commit message:** `feat: Initialize project structure with client-server architecture`
-
-#### Commit 2: [Thành viên 1] - Setup entities và database
-**Thời gian:** Ngày 1-2  
-**Nội dung:**
-```
-- Tạo các entity classes trong source/server/src/main/java/com/auction/model/:
-  * User.java
-  * Auction.java
-  * Bid.java
-  * Watchlist.java
-- Tạo application.properties với cấu hình MySQL
-- Tạo AuctionSystemApplication.java (main class)
-```
-**Commit message:** `feat: Add database entities (User, Auction, Bid, Watchlist)`
-
-#### Commit 3: [Thành viên 2] - Setup Spring Security và WebSocket config
-**Thời gian:** Ngày 2  
-**Nội dung:**
-```
-- Thêm dependencies: Spring Security, WebSocket vào pom.xml
-- Tạo source/server/src/main/java/com/auction/config/:
-  * SecurityConfig.java (cấu hình authentication)
-  * WebSocketConfig.java (cấu hình STOMP)
-  * WebConfig.java (CORS configuration)
-```
-**Commit message:** `feat: Configure Spring Security and WebSocket support`
-
-#### Commit 4: [Thành viên 3] - Initialize frontend structure
-**Thời gian:** Ngày 2  
-**Nội dung:**
-```
+- Tạo cấu trúc thư mục đầy đủ:
+  * source/client/public/ (css/, js/, admin/)
+  * source/server/src/main/java/com/auction/ (model/, repository/, service/, controller/, config/, dto/, websocket/)
+  * source/server/src/main/resources/
+- Tạo README.md với:
+  * Thông tin nhóm (3 thành viên)
+  * Mô tả dự án Auction System
+  * Công nghệ: Spring Boot, MySQL, HTML/CSS/JS
+  * Cấu trúc thư mục
+- Tạo .gitignore (Java + Node.js)
+- Tạo source/server/pom.xml với tất cả dependencies
 - Tạo source/client/package.json
-- Tạo cấu trúc thư mục: public/, public/css/, public/js/, public/admin/
-- Thêm source/client/public/index.html (landing page)
-- Thêm source/client/public/css/style.css (basic styles)
-- Thêm source/client/public/js/config.js (API endpoint config)
-- Tạo source/client/README.md với hướng dẫn chạy
+- Tạo INSTRUCTION (1).md (copy từ đề bài)
 ```
-**Commit message:** `feat: Initialize frontend structure with HTML, CSS, and config`
+**Commit message:** `chore: Initialize project skeleton with folder structure and documentation`
 
 ---
 
-### **GIAI ĐOẠN 2: Backend Core APIs** (4-5 commits)
+### **GIAI ĐOẠN 2: Backend Config Layer** (3-4 commits - Thành viên 1)
 
-#### Commit 5: [Thành viên 1] - Implement repositories
+#### Commit 2: [Thành viên 1] - Application main và base entities
+**Thời gian:** Ngày 2  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/AuctionSystemApplication.java
+- Tạo source/server/src/main/resources/application.properties (cấu hình MySQL, port 8000)
+- Tạo 4 entity classes cơ bản trong model/:
+  * User.java (chỉ fields + annotations, chưa có methods)
+  * Auction.java
+  * Bid.java
+  * Watchlist.java
+```
+**Commit message:** `feat(config): Add main application class and base entities`
+
+#### Commit 3: [Thành viên 1] - Security Configuration
+**Thời gian:** Ngày 2-3  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/config/:
+  * SecurityConfig.java (đầy đủ BCrypt, CORS, authentication)
+  * CustomUserDetailsService.java (trong service/)
+- Update pom.xml nếu thiếu Spring Security dependency
+```
+**Commit message:** `feat(config): Implement Spring Security with BCrypt password encoding`
+
+#### Commit 4: [Thành viên 1] - WebSocket & Web Configuration
 **Thời gian:** Ngày 3  
 **Nội dung:**
 ```
-- Tạo source/server/src/main/java/com/auction/repository/:
-  * AuctionRepository.java
-  * BidRepository.java
-  * UserRepository.java
-  * WatchlistRepository.java
-- Thêm custom query methods
+- Tạo source/server/src/main/java/com/auction/config/:
+  * WebSocketConfig.java (STOMP configuration)
+  * WebConfig.java (CORS configuration cho frontend)
 ```
-**Commit message:** `feat: Implement JPA repositories for all entities`
+**Commit message:** `feat(config): Configure WebSocket (STOMP) and CORS settings`
 
-#### Commit 6: [Thành viên 1] - Create DTOs and basic services
-**Thời gian:** Ngày 3-4  
-**Nội dung:**
-```
-- Tạo source/server/src/main/java/com/auction/dto/:
-  * AuctionDTO.java
-  * BidDTO.java
-  * UserDTO.java
-  * ApiResponse.java
-- Tạo UserService.java với basic CRUD
-- Tạo AuctionService.java với basic CRUD
-```
-**Commit message:** `feat: Add DTOs and implement basic User/Auction services`
-
-#### Commit 7: [Thành viên 1] - Authentication & User Management
+#### Commit 5: [Thành viên 1] - Data Initializer
 **Thời gian:** Ngày 4  
 **Nội dung:**
 ```
+- Tạo source/server/src/main/java/com/auction/config/:
+  * DataInitializer.java
+    - Tạo admin account (admin/admin123)
+    - Tạo 2 demo users (user1, user2)
+    - Khởi tạo số dư 2 tỷ cho mỗi user
+```
+**Commit message:** `feat(config): Add data initializer with default accounts`
+
+---
+
+### **GIAI ĐOẠN 3: Backend Module - User & Auth** (3-4 commits - Thành viên 2)
+
+#### Commit 6: [Thành viên 2] - User Module (Repository + Service)
+**Thời gian:** Ngày 3-4  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/repository/:
+  * UserRepository.java
+- Tạo source/server/src/main/java/com/auction/service/:
+  * UserService.java (CRUD user, update balance)
 - Tạo source/server/src/main/java/com/auction/dto/:
+  * UserDTO.java
   * LoginRequest.java
   * RegisterRequest.java
-- Tạo source/server/src/main/java/com/auction/service/:
-  * CustomUserDetailsService.java
-- Tạo source/server/src/main/java/com/auction/controller/:
-  * AuthController.java (login, register, profile)
-  * UserController.java (get user info)
 ```
-**Commit message:** `feat: Implement authentication (login, register) and user management`
+**Commit message:** `feat(user): Implement User repository, service and DTOs`
 
-#### Commit 8: [Thành viên 2] - Auction Management APIs
+#### Commit 7: [Thành viên 2] - Auth Controller
 **Thời gian:** Ngày 4-5  
 **Nội dung:**
 ```
 - Tạo source/server/src/main/java/com/auction/controller/:
-  * AuctionController.java
-    - GET /api/auctions (list active & pending)
-    - GET /api/auctions/{id} (detail)
-    - GET /api/auctions/search (search)
+  * AuthController.java
+    - POST /api/auth/register
+    - POST /api/auth/login (handled by Security)
+    - GET /api/auth/profile
+- Tạo source/server/src/main/java/com/auction/dto/:
+  * ApiResponse.java
 ```
-**Commit message:** `feat: Implement Auction APIs (list, detail, search)`
+**Commit message:** `feat(auth): Add authentication endpoints (register, login, profile)`
 
-#### Commit 9: [Thành viên 2] - Bidding System
+#### Commit 8: [Thành viên 2] - User Controller & Admin User Management
 **Thời gian:** Ngày 5  
 **Nội dung:**
 ```
-- Tạo source/server/src/main/java/com/auction/dto/:
-  * BidRequest.java
-- Complete BidService.java với bid logic
 - Tạo source/server/src/main/java/com/auction/controller/:
-  * BidController.java
-    - POST /api/bids (place bid)
-    - GET /api/bids/auction/{id} (bid history)
-    - GET /api/bids/user (user bids)
+  * UserController.java
+    - GET /api/users/{id}
+- Update AdminController với user management:
+  * GET /api/admin/users
+  * POST /api/admin/users/{id}/toggle-status
+  * POST /api/admin/users/{id}/update-balance
 ```
-**Commit message:** `feat: Implement bidding system with validation and history`
+**Commit message:** `feat(user): Add user controller and admin user management APIs`
 
 ---
 
-### **GIAI ĐOẠN 3: Advanced Features** (4-5 commits)
+### **GIAI ĐOẠN 4: Backend Module - Auction** (3-4 commits - Thành viên 3)
 
-#### Commit 10: [Thành viên 2] - WebSocket Real-time Updates
+#### Commit 9: [Thành viên 3] - Auction Module (Repository + Service)
+**Thời gian:** Ngày 4-5  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/repository/:
+  * AuctionRepository.java (với custom queries)
+- Tạo source/server/src/main/java/com/auction/service/:
+  * AuctionService.java (CRUD auctions, start/end logic)
+  * AuctionSchedulerService.java (auto start/end với @Scheduled)
+- Tạo source/server/src/main/java/com/auction/dto/:
+  * AuctionDTO.java
+```
+**Commit message:** `feat(auction): Implement Auction repository, service and scheduler`
+
+#### Commit 10: [Thành viên 3] - Auction Controller
 **Thời gian:** Ngày 5-6  
 **Nội dung:**
 ```
-- Tạo source/server/src/main/java/com/auction/websocket/:
-  * WebSocketController.java
-- Update BidService.java để broadcast bid updates
-- Thêm real-time notification cho auction events
-```
-**Commit message:** `feat: Add WebSocket support for real-time bidding updates`
-
-#### Commit 11: [Thành viên 2] - Auction Scheduler
-**Thời gian:** Ngày 6  
-**Nội dung:**
-```
-- Tạo source/server/src/main/java/com/auction/service/:
-  * AuctionSchedulerService.java
-    - Auto-start auctions when startTime reached
-    - Auto-end auctions when endTime reached
-    - Auto-end after 20 minutes of inactivity
-- Update Auction entity với lastBidTime field
-```
-**Commit message:** `feat: Implement auction auto-scheduler (start, end, inactivity check)`
-
-#### Commit 12: [Thành viên 1] - Watchlist Feature
-**Thời gian:** Ngày 6-7  
-**Nội dung:**
-```
-- Tạo source/server/src/main/java/com/auction/dto/:
-  * WatchlistDTO.java
-- Complete WatchlistService.java
 - Tạo source/server/src/main/java/com/auction/controller/:
-  * WatchlistController.java
-    - POST /api/watchlist (add)
-    - GET /api/watchlist/user (list)
-    - DELETE /api/watchlist/{id} (remove)
+  * AuctionController.java
+    - GET /api/auctions (list ACTIVE + PENDING)
+    - GET /api/auctions/{id}
+    - GET /api/auctions/search
 ```
-**Commit message:** `feat: Implement watchlist feature for tracking auctions`
+**Commit message:** `feat(auction): Add auction listing and detail endpoints`
 
-#### Commit 13: [Thành viên 1] - Admin Panel APIs
-**Thời gian:** Ngày 7  
+#### Commit 11: [Thành viên 3] - Admin Auction Management
+**Thời gian:** Ngày 6  
 **Nội dung:**
 ```
 - Tạo source/server/src/main/java/com/auction/controller/:
   * AdminController.java
     - POST /api/admin/auctions (create)
     - PUT /api/admin/auctions/{id} (update)
-    - DELETE /api/admin/auctions/{id} (delete)
-    - POST /api/admin/auctions/{id}/start (manual start)
-    - POST /api/admin/auctions/{id}/end (manual end)
-    - GET /api/admin/users (list users)
-    - POST /api/admin/users/{id}/toggle-status (ban/unban)
-    - GET /api/admin/statistics (dashboard stats)
+    - DELETE /api/admin/auctions/{id}
+    - POST /api/admin/auctions/{id}/start
+    - POST /api/admin/auctions/{id}/end
+    - GET /api/admin/statistics
+    - GET /api/admin/auctions/all
 ```
-**Commit message:** `feat: Add admin panel APIs for auction and user management`
+**Commit message:** `feat(auction): Implement admin auction management (CRUD, start, end)`
 
-#### Commit 14: [Thành viên 1] - Data Initialization
+---
+
+### **GIAI ĐOẠN 5: Backend Module - Bidding** (2-3 commits - Thành viên 2)
+
+#### Commit 12: [Thành viên 2] - Bid Module
+**Thời gian:** Ngày 6-7  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/repository/:
+  * BidRepository.java
+- Tạo source/server/src/main/java/com/auction/service/:
+  * BidService.java (place bid với validation, extension logic)
+- Tạo source/server/src/main/java/com/auction/dto/:
+  * BidDTO.java
+  * BidRequest.java
+```
+**Commit message:** `feat(bid): Implement bidding system with validation and extension`
+
+#### Commit 13: [Thành viên 2] - Bid Controller & WebSocket
+**Thời gian:** Ngày 7  
+**Nội dung:**
+```
+- Tạo source/server/src/main/java/com/auction/controller/:
+  * BidController.java
+    - POST /api/bids
+    - GET /api/bids/auction/{id}
+    - GET /api/bids/user
+- Tạo source/server/src/main/java/com/auction/websocket/:
+  * WebSocketController.java
+- Update BidService để broadcast bid updates qua WebSocket
+```
+**Commit message:** `feat(bid): Add bid controller and WebSocket real-time updates`
+
+---
+
+### **GIAI ĐOẠN 6: Backend Module - Watchlist** (2 commits - Thành viên 3)
+
+#### Commit 14: [Thành viên 3] - Watchlist Module
 **Thời gian:** Ngày 7-8  
 **Nội dung:**
 ```
-- Tạo source/server/src/main/java/com/auction/config/:
-  * DataInitializer.java
-    - Tạo admin account mặc định
-    - Tạo demo users
-    - Tạo sample auctions (nếu cần)
-- Tạo source/server/README.md với hướng dẫn chạy backend
+- Tạo source/server/src/main/java/com/auction/repository/:
+  * WatchlistRepository.java
+- Tạo source/server/src/main/java/com/auction/service/:
+  * WatchlistService.java
+- Tạo source/server/src/main/java/com/auction/dto/:
+  * WatchlistDTO.java
 ```
-**Commit message:** `feat: Add data initializer with default admin and demo users`
+**Commit message:** `feat(watchlist): Implement watchlist repository and service`
 
----
-
-### **GIAI ĐOẠN 4: Frontend Implementation** (6-7 commits)
-
-#### Commit 15: [Thành viên 3] - Authentication Pages
+#### Commit 15: [Thành viên 3] - Watchlist Controller
 **Thời gian:** Ngày 8  
 **Nội dung:**
 ```
-- Tạo source/client/public/login.html (full design)
-- Tạo source/client/public/register.html (full design)
-- Tạo source/client/public/js/auth.js:
-  * Login logic với API call
-  * Register logic với API call
-  * Session management (localStorage)
+- Tạo source/server/src/main/java/com/auction/controller/:
+  * WatchlistController.java
+    - POST /api/watchlist
+    - GET /api/watchlist/user
+    - DELETE /api/watchlist/{id}
+    - DELETE /api/watchlist/auction/{auctionId}
+    - GET /api/watchlist/check
 ```
-**Commit message:** `feat: Create login and register pages with authentication logic`
-
-#### Commit 16: [Thành viên 3] - Dashboard & Header Components
-**Thời gian:** Ngày 8-9  
-**Nội dung:**
-```
-- Tạo source/client/public/dashboard.html
-- Tạo source/client/public/js/header.js:
-  * User menu
-  * Balance display
-  * Logout functionality
-- Tạo source/client/public/js/dashboard.js:
-  * Fetch active & pending auctions
-  * Display auction cards
-  * WebSocket connection for updates
-```
-**Commit message:** `feat: Implement user dashboard with auction listings`
-
-#### Commit 17: [Thành viên 3] - Auction Detail Page
-**Thời gian:** Ngày 9  
-**Nội dung:**
-```
-- Tạo source/client/public/auction-detail.html
-- Tạo source/client/public/js/auction.js:
-  * Fetch auction details
-  * Display current bid
-  * Bid form handling
-  * WebSocket for real-time updates
-  * Watchlist toggle
-```
-**Commit message:** `feat: Create auction detail page with real-time bidding`
-
-#### Commit 18: [Thành viên 3] - User Features (My Bids & Watchlist)
-**Thời gian:** Ngày 10  
-**Nội dung:**
-```
-- Tạo source/client/public/my-bids.html
-- Tạo source/client/public/watchlist.html
-- Thêm logic để:
-  * Fetch và display user's bid history
-  * Fetch và display watchlist
-  * Remove from watchlist
-```
-**Commit message:** `feat: Add My Bids and Watchlist pages for users`
-
-#### Commit 19: [Thành viên 3] - Admin Dashboard
-**Thời gian:** Ngày 10-11  
-**Nội dung:**
-```
-- Tạo source/client/public/admin/dashboard.html:
-  * Statistics cards
-  * System overview
-- Tạo source/client/public/js/admin-header.js:
-  * Admin navigation
-  * Admin menu
-```
-**Commit message:** `feat: Create admin dashboard with statistics`
-
-#### Commit 20: [Thành viên 3] - Admin Auction Management
-**Thời gian:** Ngày 11  
-**Nội dung:**
-```
-- Tạo source/client/public/admin/auctions.html:
-  * List all auctions (including ENDED)
-  * Create auction form
-  * Edit auction modal
-  * Delete confirmation
-  * Start/End buttons
-- Thêm logic trong dashboard.js hoặc tạo admin-auctions.js
-```
-**Commit message:** `feat: Implement admin auction management (CRUD, start, end)`
-
-#### Commit 21: [Thành viên 3] - Admin User Management & Polish
-**Thời gian:** Ngày 11-12  
-**Nội dung:**
-```
-- Tạo source/client/public/admin/users.html:
-  * List all users
-  * Ban/Unban buttons
-  * Update balance form
-- Tạo source/client/public/js/main.js:
-  * Global utilities
-  * API helpers
-  * Error handling
-- Polish CSS và responsive design
-```
-**Commit message:** `feat: Add admin user management and improve UI/UX`
+**Commit message:** `feat(watchlist): Add watchlist controller with CRUD operations`
 
 ---
 
-### **GIAI ĐOẠN 5: Testing & Documentation** (2-3 commits)
+### **GIAI ĐOẠN 7: Frontend - Basic Pages** (4-5 commits - Thành viên 2)
 
-#### Commit 22: [Thành viên 1] - Testing & Bug Fixes
+#### Commit 16: [Thành viên 2] - Frontend base setup
+**Thời gian:** Ngày 8  
+**Nội dung:**
+```
+- Tạo source/client/public/css/:
+  * style.css (tất cả styles cho toàn bộ app)
+- Tạo source/client/public/js/:
+  * config.js (API_BASE_URL = 'http://localhost:8000')
+  * auth.js (login/logout/session helpers)
+```
+**Commit message:** `feat(frontend): Add base CSS and authentication utilities`
+
+#### Commit 17: [Thành viên 2] - Index page
+**Thời gian:** Ngày 8-9  
+**Nội dung:**
+```
+- Tạo source/client/public/index.html
+  * Landing page với giới thiệu hệ thống
+  * Links đến login/register
+  * Navbar cơ bản
+```
+**Commit message:** `feat(frontend): Create index landing page`
+
+#### Commit 18: [Thành viên 2] - Login & Register pages
+**Thời gian:** Ngày 9  
+**Nội dung:**
+```
+- Tạo source/client/public/login.html
+  * Form đăng nhập
+  * Call API POST /api/auth/login (thông qua Spring Security)
+- Tạo source/client/public/register.html
+  * Form đăng ký
+  * Call API POST /api/auth/register
+- Update auth.js với login/register functions
+```
+**Commit message:** `feat(frontend): Add login and register pages with API integration`
+
+#### Commit 19: [Thành viên 2] - User Dashboard
+**Thời gian:** Ngày 9-10  
+**Nội dung:**
+```
+- Tạo source/client/public/dashboard.html
+  * Hiển thị ACTIVE + PENDING auctions
+  * Auction cards với thông tin
+  * WebSocket connection để listen updates
+- Tạo source/client/public/js/:
+  * header.js (user menu, balance, logout)
+  * dashboard.js (fetch auctions, display, WebSocket)
+```
+**Commit message:** `feat(frontend): Implement user dashboard with auction listings`
+
+---
+
+### **GIAI ĐOẠN 8: Frontend - User Pages** (3-4 commits - Thành viên 3)
+
+#### Commit 20: [Thành viên 3] - Auction Detail page
+**Thời gian:** Ngày 10  
+**Nội dung:**
+```
+- Tạo source/client/public/auction-detail.html
+  * Hiển thị chi tiết auction
+  * Form đặt giá (nếu ACTIVE)
+  * Watchlist toggle button
+  * Real-time updates qua WebSocket
+- Tạo source/client/public/js/:
+  * auction.js (fetch detail, place bid, watchlist, WebSocket)
+```
+**Commit message:** `feat(frontend): Create auction detail page with real-time bidding`
+
+#### Commit 21: [Thành viên 3] - My Bids page
+**Thời gian:** Ngày 10-11  
+**Nội dung:**
+```
+- Tạo source/client/public/my-bids.html
+  * Hiển thị lịch sử đặt giá của user
+  * Filter theo status (ACTIVE, PENDING, ENDED)
+  * Link đến auction detail
+- Update dashboard.js hoặc tạo my-bids.js
+```
+**Commit message:** `feat(frontend): Add My Bids page for bid history`
+
+#### Commit 22: [Thành viên 3] - Watchlist page
+**Thời gian:** Ngày 11  
+**Nội dung:**
+```
+- Tạo source/client/public/watchlist.html
+  * Hiển thị danh sách auctions đã follow
+  * Nút remove from watchlist
+  * Link đến auction detail
+- Tạo source/client/public/js/:
+  * watchlist.js hoặc update existing
+```
+**Commit message:** `feat(frontend): Implement watchlist page for tracked auctions`
+
+---
+
+### **GIAI ĐOẠN 9: Frontend - Admin Pages** (3-4 commits - Thành viên 1)
+
+#### Commit 23: [Thành viên 1] - Admin Dashboard
+**Thời gian:** Ngày 11-12  
+**Nội dung:**
+```
+- Tạo source/client/public/admin/dashboard.html
+  * Statistics cards (total users, auctions, bids)
+  * Charts (nếu có thời gian)
+  * Quick links
+- Tạo source/client/public/js/:
+  * admin-header.js (admin navigation)
+  * admin-dashboard.js (fetch statistics)
+```
+**Commit message:** `feat(admin): Create admin dashboard with system statistics`
+
+#### Commit 24: [Thành viên 1] - Admin Auction Management
+**Thời gian:** Ngày 12  
+**Nội dung:**
+```
+- Tạo source/client/public/admin/auctions.html
+  * List tất cả auctions (bao gồm ENDED)
+  * Create auction form (modal)
+  * Edit auction (modal)
+  * Delete confirmation
+  * Start/End buttons
+- Tạo admin-auctions.js hoặc update dashboard.js
+```
+**Commit message:** `feat(admin): Implement auction management (CRUD, start, end)`
+
+#### Commit 25: [Thành viên 1] - Admin User Management
 **Thời gian:** Ngày 12-13  
 **Nội dung:**
 ```
-- Test toàn bộ backend APIs
-- Fix bugs phát hiện được
-- Optimize database queries
-- Add validation improvements
+- Tạo source/client/public/admin/users.html
+  * List tất cả users
+  * Ban/Unban button
+  * Update balance form
+  * User statistics
+- Update admin-header.js nếu cần
 ```
-**Commit message:** `fix: Backend bug fixes and query optimization`
+**Commit message:** `feat(admin): Add user management page (ban, unban, update balance)`
 
-#### Commit 23: [Thành viên 3] - Frontend Testing & Fixes
+---
+
+### **GIAI ĐOẠN 10: Polish & Testing** (2-3 commits)
+
+#### Commit 26: [Thành viên 2] - Backend testing & fixes
 **Thời gian:** Ngày 13  
 **Nội dung:**
 ```
-- Test toàn bộ user flows
-- Fix UI bugs
-- Improve error messages
-- Add loading states
+- Test tất cả APIs
+- Fix bugs backend
+- Optimize queries
+- Add error handling
 ```
-**Commit message:** `fix: Frontend bug fixes and UX improvements`
+**Commit message:** `fix(backend): Bug fixes and optimization`
 
-#### Commit 24: [Thành viên 2] - Integration Testing & Final Polish
+#### Commit 27: [Thành viên 3] - Frontend polish & fixes
 **Thời gian:** Ngày 13-14  
 **Nội dung:**
 ```
-- Test WebSocket connections
-- Test auction scheduler
-- Test concurrent bidding scenarios
-- Final bug fixes
+- Test UI flows
+- Fix responsive design
+- Improve error messages
+- Add loading states
 ```
-**Commit message:** `fix: Integration testing and WebSocket improvements`
+**Commit message:** `fix(frontend): UI improvements and bug fixes`
 
-#### Commit 25: [Tất cả] - Documentation & Screenshots
+#### Commit 28: [Thành viên 1 hoặc tất cả] - Documentation & Screenshots
 **Thời gian:** Ngày 14  
 **Nội dung:**
 ```
-- Update README.md với đầy đủ thông tin:
-  * Thông tin nhóm
-  * Hướng dẫn cài đặt
-  * Hướng dẫn chạy
+- Update README.md đầy đủ:
+  * Thông tin nhóm chi tiết
+  * Hướng dẫn cài đặt MySQL
+  * Hướng dẫn chạy server (cd source/server && mvn spring-boot:run)
+  * Hướng dẫn chạy client (cd source/client && npm start)
   * API documentation
-  * Screenshots
-- Tạo thư mục statics/ và thêm screenshots
-- Finalize INSTRUCTION.md compliance
+  * Tài khoản mặc định
+- Tạo thư mục statics/ với screenshots
+- Tạo source/server/README.md
+- Tạo source/client/README.md
 ```
 **Commit message:** `docs: Complete documentation with screenshots and setup guide`
 
@@ -376,78 +441,100 @@
 
 ## 📊 TỔNG KẾT PHÂN CÔNG
 
-### Thành viên 1 (Backend Core): ~35% công việc
-- **Commits:** 1, 2, 5, 6, 7, 12, 13, 14, 22
-- **Tổng:** 9 commits
-- **Focus:** Database, Entities, Repositories, Auth, Admin APIs, Watchlist
+### Thành viên 1 (Config + Admin Frontend): ~30% công việc
+- **Commits:** 1 (chung), 2, 3, 4, 5, 23, 24, 25, 28
+- **Tổng:** 8 commits riêng + 1 chung
+- **Backend:** Tất cả config files (Security, WebSocket, WebConfig, DataInitializer)
+- **Frontend:** 3 màn hình admin (dashboard, auctions, users)
 
-### Thành viên 2 (Backend Features): ~30% công việc  
-- **Commits:** 3, 8, 9, 10, 11, 24
-- **Tổng:** 6 commits
-- **Focus:** Security, WebSocket, Auctions, Bidding, Scheduler, Integration
+### Thành viên 2 (User/Auth Module + Basic Frontend): ~40% công việc  
+- **Commits:** 1 (chung), 6, 7, 8, 12, 13, 16, 17, 18, 19, 26
+- **Tổng:** 10 commits riêng + 1 chung
+- **Backend:** User module (repository, service, controller), Auth, Bid module
+- **Frontend:** 4 màn hình (index, login, register, dashboard) + base setup
 
-### Thành viên 3 (Frontend): ~35% công việc
-- **Commits:** 4, 15, 16, 17, 18, 19, 20, 21, 23
-- **Tổng:** 9 commits
-- **Focus:** UI/UX, HTML, CSS, JavaScript, Admin Panel, User Pages
-
-### Commit chung: 1 commit (25)
-- Documentation final
+### Thành viên 3 (Auction/Watchlist Module + User Frontend): ~30% công việc
+- **Commits:** 1 (chung), 9, 10, 11, 14, 15, 20, 21, 22, 27
+- **Tổng:** 9 commits riêng + 1 chung
+- **Backend:** Auction module (repository, service, controller, scheduler), Watchlist module
+- **Frontend:** 3 màn hình (auction-detail, my-bids, watchlist)
 
 ---
 
 ## 💡 LƯU Ý QUAN TRỌNG
 
-### 1. **Thứ tự commit:**
-- Tuân thủ đúng thứ tự từ Commit 1 → 25
-- Không commit vượt quá 2-3 commits/ngày để tự nhiên
-- Mỗi người commit vào các ngày khác nhau
+### 1. **Commit đầu tiên (Skeleton):**
+- **Rất quan trọng:** Commit 1 phải tạo toàn bộ cấu trúc thư mục
+- Tất cả 3 người cùng làm hoặc 1 người làm rồi các người khác review
+- Đây là nền tảng để các commit sau không bị conflict
 
-### 2. **Commit message format:**
+### 2. **Thứ tự commit:**
+- Backend config TRƯỚC (commits 2-5)
+- Backend modules song song (commits 6-15)
+- Frontend sau khi backend modules xong (commits 16-25)
+- Polish cuối cùng (commits 26-28)
+
+### 3. **Module-based approach:**
+- Mỗi module đầy đủ: model → repository → service → controller
+- Không nên tách quá nhỏ (VD: chỉ làm model rồi commit)
+- Mỗi commit nên có 1 module hoàn chỉnh hoặc 1 trang frontend hoàn chỉnh
+
+### 4. **Frontend screens phân chia:**
 ```
-<type>: <description>
+Thành viên 2 (4 màn):
+- index.html (landing)
+- login.html
+- register.html
+- dashboard.html (user)
 
-Types: feat, fix, docs, style, refactor, test
+Thành viên 3 (3 màn):
+- auction-detail.html
+- my-bids.html
+- watchlist.html
+
+Thành viên 1 (3 màn admin):
+- admin/dashboard.html
+- admin/auctions.html
+- admin/users.html
 ```
 
-### 3. **Trước mỗi commit:**
-- Test code để đảm bảo không lỗi
-- Chỉ commit những file liên quan
-- Viết commit message rõ ràng, cụ thể
-
-### 4. **Git commands:**
+### 5. **Git commands:**
 ```bash
-# Thêm file cụ thể
-git add source/server/src/main/java/com/auction/model/User.java
+# Commit 1 - Skeleton (làm chung hoặc 1 người)
+git add .
+git commit -m "chore: Initialize project skeleton with folder structure and documentation"
+git push origin main
 
-# Commit với message
-git commit -m "feat: Add User entity with JPA annotations"
-
-# Push lên GitHub
+# Các commits sau
+git add source/server/src/main/java/com/auction/config/SecurityConfig.java
+git add source/server/src/main/java/com/auction/service/CustomUserDetailsService.java
+git commit -m "feat(config): Implement Spring Security with BCrypt password encoding"
 git push origin main
 ```
 
-### 5. **Communication:**
-- Mỗi thành viên nên comment trên commit của nhau
-- Review code qua Pull Request nếu có thể
-- Báo cáo tiến độ trong nhóm
+### 6. **Testing:**
+- Test API bằng Postman sau mỗi backend commit
+- Test UI trong browser sau mỗi frontend commit
+- Đảm bảo không conflict với code của người khác
 
 ---
 
 ## ✅ CHECKLIST TRƯỚC KHI NỘP
 
-- [ ] Tất cả 25 commits đã được push
-- [ ] Mỗi thành viên có ít nhất 6-9 commits
-- [ ] README.md đầy đủ thông tin
-- [ ] Có screenshots trong statics/
-- [ ] Code chạy được theo hướng dẫn
-- [ ] Không có lỗi compile/runtime nghiêm trọng
-- [ ] Tuân thủ cấu trúc INSTRUCTION.md
+- [ ] Có đủ ~28 commits
+- [ ] Thành viên 1: 8-9 commits (config + admin frontend)
+- [ ] Thành viên 2: 10-11 commits (user/bid modules + basic frontend)
+- [ ] Thành viên 3: 9-10 commits (auction/watchlist modules + user frontend)
+- [ ] README.md đầy đủ theo INSTRUCTION.md
+- [ ] Screenshots trong statics/
+- [ ] Backend chạy được: `cd source/server && mvn spring-boot:run`
+- [ ] Frontend chạy được: `cd source/client && npm start`
+- [ ] Tuân thủ cấu trúc thư mục: source/client, source/server
 
 ---
 
 ## 📞 HỖ TRỢ
 
-Nếu cần thêm chi tiết về bất kỳ commit nào, hãy hỏi tôi!
+Nếu cần chi tiết hơn về bất kỳ commit nào (VD: code mẫu cho SecurityConfig.java), hãy hỏi tôi!
 
 **Good luck! 🎉**
