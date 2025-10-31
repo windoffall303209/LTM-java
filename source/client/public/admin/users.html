@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Users - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard.html">👑 Admin Panel</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="dashboard.html">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="auctions.html">Quản Lý Đấu Giá</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="users.html">Quản Lý Users</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="../dashboard.html">
+                <i class="bi bi-house"></i> Trang Chủ
+              </a>
+            </li>
+            <li class="nav-item">
+              <span class="nav-link text-warning">
+                <i class="bi bi-person-badge"></i> <span id="adminName">Admin</span>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="Auth.logout()">
+                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>👥 Quản Lý Users</h2>
+        <div>
+          <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm users..." style="width: 300px;" />
+        </div>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Tổng Users</h6>
+              <h3 id="totalUsersCount">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Users Hoạt Động</h6>
+              <h3 class="text-success" id="activeUsersCount">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Users Bị Khóa</h6>
+              <h3 class="text-danger" id="inactiveUsersCount">0</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">Admins</h6>
+              <h3 class="text-warning" id="adminCount">0</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Danh Sách Users</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Tên Đầy Đủ</th>
+                  <th>Email</th>
+                  <th>Số Dư</th>
+                  <th>Role</th>
+                  <th>Trạng Thái</th>
+                  <th>Ngày Tạo</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr>
+                  <td colspan="9" class="text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div class="modal fade" id="userDetailModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Chi Tiết User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>ID:</strong> <span id="detailId">-</span></p>
+                <p><strong>Username:</strong> <span id="detailUsername">-</span></p>
+                <p><strong>Email:</strong> <span id="detailEmail">-</span></p>
+                <p><strong>Tên Đầy Đủ:</strong> <span id="detailFullName">-</span></p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Số Dư:</strong> <span id="detailBalance">-</span></p>
+                <p><strong>Role:</strong> <span id="detailRole">-</span></p>
+                <p><strong>Trạng Thái:</strong> <span id="detailStatus">-</span></p>
+                <p><strong>Ngày Tạo:</strong> <span id="detailCreatedAt">-</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin-header.js"></script>
+    <script>
+      // Require admin authentication
+      if (!Auth.requireAdmin()) {
+        throw new Error('Unauthorized');
+      }
+
+      // Render admin header
+      renderAdminHeader('users');
+
+      let allUsers = [];
+
+      /**
+       * Load all users
+       */
+      async function loadUsers() {
+        try {
+          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/users`, {
+            credentials: 'include'
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to load users');
+          }
+
+          const result = await response.json();
+
+          if (result.success) {
+            allUsers = result.data || [];
+            updateStatistics();
+            displayUsers(allUsers);
+          } else {
+            showError('Không thể tải danh sách users');
+          }
+        } catch (error) {
+          console.error('Error loading users:', error);
+          showError('Lỗi kết nối đến server');
+        }
+      }
+
+      /**
+       * Update statistics
+       */
+      function updateStatistics() {
+        const totalUsers = allUsers.length;
+        const activeUsers = allUsers.filter(u => u.isActive).length;
+        const inactiveUsers = allUsers.filter(u => !u.isActive).length;
+        const admins = allUsers.filter(u => u.role === 'ADMIN').length;
+
+        document.getElementById('totalUsersCount').textContent = totalUsers;
+        document.getElementById('activeUsersCount').textContent = activeUsers;
+        document.getElementById('inactiveUsersCount').textContent = inactiveUsers;
+        document.getElementById('adminCount').textContent = admins;
+      }
+
+      /**
+       * Display users in table
+       */
+      function displayUsers(users) {
+        const tbody = document.getElementById('usersTableBody');
+
+        if (!users || users.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">Không có users</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = '';
+
+        users.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.userId}</td>
+            <td>${user.username}</td>
+            <td>${user.fullName || 'N/A'}</td>
+            <td>${user.email || 'N/A'}</td>
+            <td>${formatCurrency(user.balance || 0)}</td>
+            <td>
+              ${user.role === 'ADMIN'
+                ? '<span class="badge bg-warning">ADMIN</span>'
+                : '<span class="badge bg-info">USER</span>'}
+            </td>
+            <td>
+              ${user.isActive
+                ? '<span class="badge bg-success">Hoạt động</span>'
+                : '<span class="badge bg-danger">Bị khóa</span>'}
+            </td>
+            <td>${formatDate(user.createdAt)}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary" onclick="viewUserDetail(${user.userId})" title="Xem chi tiết">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      /**
+       * View user detail
+       */
+      async function viewUserDetail(userId) {
+        try {
+          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/users/${userId}`, {
+            credentials: 'include'
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            const user = result.data;
+
+            document.getElementById('detailId').textContent = user.userId;
+            document.getElementById('detailUsername').textContent = user.username;
+            document.getElementById('detailEmail').textContent = user.email || 'N/A';
+            document.getElementById('detailFullName').textContent = user.fullName || 'N/A';
+            document.getElementById('detailBalance').textContent = formatCurrency(user.balance || 0);
+            document.getElementById('detailRole').innerHTML = user.role === 'ADMIN'
+              ? '<span class="badge bg-warning">ADMIN</span>'
+              : '<span class="badge bg-info">USER</span>';
+            document.getElementById('detailStatus').innerHTML = user.isActive
+              ? '<span class="badge bg-success">Hoạt động</span>'
+              : '<span class="badge bg-danger">Bị khóa</span>';
+            document.getElementById('detailCreatedAt').textContent = formatDate(user.createdAt);
+
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('userDetailModal'));
+            modal.show();
+          } else {
+            showError('Không thể tải thông tin user');
+          }
+        } catch (error) {
+          console.error('Error loading user detail:', error);
+          showError('Lỗi khi tải thông tin user');
+        }
+      }
+
+      /**
+       * Search users
+       */
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+
+        if (!searchTerm) {
+          displayUsers(allUsers);
+          return;
+        }
+
+        const filtered = allUsers.filter(user =>
+          user.username.toLowerCase().includes(searchTerm) ||
+          (user.fullName && user.fullName.toLowerCase().includes(searchTerm)) ||
+          (user.email && user.email.toLowerCase().includes(searchTerm))
+        );
+
+        displayUsers(filtered);
+      });
+
+      /**
+       * Show error message
+       */
+      function showError(message) {
+        const tbody = document.getElementById('usersTableBody');
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">${message}</td></tr>`;
+      }
+
+      /**
+       * Format currency
+       */
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
+      }
+
+      /**
+       * Format date
+       */
+      function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        return new Date(dateString).toLocaleString('vi-VN');
+      }
+
+      // Load users on page load
+      document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+  </body>
+</html>
