@@ -1,0 +1,131 @@
+# ===================================================================
+# Source Directory .gitignore
+# ===================================================================
+
+# ===================================================================
+# SERVER (Java/Spring Boot)
+# ===================================================================
+
+# Maven
+server/target/
+server/pom.xml.tag
+server/pom.xml.releaseBackup
+server/pom.xml.versionsBackup
+server/pom.xml.next
+server/release.properties
+server/dependency-reduced-pom.xml
+server/buildNumber.properties
+server/.mvn/timing.properties
+server/.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+server/.idea/
+server/*.iws
+server/*.iml
+server/*.ipr
+server/out/
+
+# Eclipse
+server/.apt_generated
+server/.classpath
+server/.factorypath
+server/.project
+server/.settings
+server/.springBeans
+server/.sts4-cache
+
+# NetBeans
+server/nbproject/private/
+server/build/
+server/nbbuild/
+server/dist/
+server/nbdist/
+server/.nb-gradle/
+
+# VS Code
+server/.vscode/
+
+# Logs
+server/*.log
+server/logs/
+
+# OS Files
+server/.DS_Store
+server/Thumbs.db
+
+# Spring Boot
+server/spring-boot-*.log
+
+# ===================================================================
+# CLIENT (Node.js/JavaScript)
+# ===================================================================
+
+# Dependencies
+client/node_modules/
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/package-lock.json
+client/yarn.lock
+
+# Production build
+client/dist/
+client/build/
+
+# IDE
+client/.idea/
+client/.vscode/
+client/*.swp
+client/*.swo
+client/*~
+
+# OS Files
+client/.DS_Store
+client/Thumbs.db
+
+# Logs
+client/*.log
+client/logs/
+
+# Environment variables
+client/.env
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
+
+# ===================================================================
+# COMMON
+# ===================================================================
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.~*
+
+# Security
+*.key
+*.pem
+*.p12
+*.jks
+credentials.json
+secrets.yaml
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
