@@ -14,7 +14,9 @@
       "Bash(powershell -Command:*)",
       "Bash(for file in BidDTO.java BidRequest.java LoginRequest.java RegisterRequest.java UserDTO.java WatchlistDTO.java)",
       "Bash(do cp \"C:\\Users\\WIND-OF-FALL\\Downloads\\ClientServer2\\source\\server\\src\\main\\java\\com\\auction\\dto$file\" \"C:\\Users\\WIND-OF-FALL\\Downloads\\ClientServer2_BaseProject\\source\\server\\src\\main\\java\\com\\auction\\dto$file\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(mvn clean compile:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
