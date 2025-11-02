@@ -4,15 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản Lý Đấu Giá - Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <!-- Admin Custom CSS -->
+    <link rel="stylesheet" href="../css/admin-style.css" />
   </head>
-  <body>
+  <body class="admin-panel">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
       <div class="container-fluid">
         <a class="navbar-brand" href="dashboard.html">👑 Admin Panel</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -21,7 +34,9 @@
               <a class="nav-link" href="dashboard.html">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="auctions.html">Quản Lý Đấu Giá</a>
+              <a class="nav-link active" href="auctions.html"
+                >Quản Lý Đấu Giá</a
+              >
             </li>
             <li class="nav-item">
               <a class="nav-link" href="users.html">Quản Lý Users</a>
@@ -35,7 +50,8 @@
             </li>
             <li class="nav-item">
               <span class="nav-link text-warning">
-                <i class="bi bi-person-badge"></i> <span id="adminName">Admin</span>
+                <i class="bi bi-person-badge"></i>
+                <span id="adminName">Admin</span>
               </span>
             </li>
             <li class="nav-item">
@@ -52,8 +68,14 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>🔨 Quản Lý Đấu Giá</h2>
         <div class="d-flex gap-2">
-          <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm đấu giá..." style="width: 300px;" />
-          <select id="statusFilter" class="form-select" style="width: 200px;">
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Tìm kiếm đấu giá..."
+            style="width: 300px"
+          />
+          <select id="statusFilter" class="form-select" style="width: 200px">
             <option value="">Tất cả trạng thái</option>
             <option value="PENDING">Sắp diễn ra</option>
             <option value="ACTIVE">Đang diễn ra</option>
@@ -103,7 +125,9 @@
 
       <!-- Auctions Table -->
       <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
           <h5 class="mb-0">Danh Sách Đấu Giá</h5>
         </div>
         <div class="card-body">
@@ -126,7 +150,10 @@
               <tbody id="auctionsTableBody">
                 <tr>
                   <td colspan="10" class="text-center">
-                    <div class="spinner-border text-primary" role="status"></div>
+                    <div
+                      class="spinner-border text-primary"
+                      role="status"
+                    ></div>
                     Loading...
                   </td>
                 </tr>
@@ -143,7 +170,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="formModalTitle">Tạo Đấu Giá Mới</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <form id="auctionForm" onsubmit="handleSubmitAuction(event)">
             <div class="modal-body">
@@ -151,49 +182,104 @@
               <input type="hidden" id="formMode" value="create" />
 
               <div class="mb-3">
-                <label for="auctionTitle" class="form-label">Tiêu Đề <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="auctionTitle" required />
+                <label for="auctionTitle" class="form-label"
+                  >Tiêu Đề <span class="text-danger">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="auctionTitle"
+                  required
+                />
               </div>
 
               <div class="mb-3">
-                <label for="auctionDescription" class="form-label">Mô Tả <span class="text-danger">*</span></label>
-                <textarea class="form-control" id="auctionDescription" rows="3" required></textarea>
+                <label for="auctionDescription" class="form-label"
+                  >Mô Tả <span class="text-danger">*</span></label
+                >
+                <textarea
+                  class="form-control"
+                  id="auctionDescription"
+                  rows="3"
+                  required
+                ></textarea>
               </div>
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="startingPrice" class="form-label">Giá Khởi Điểm (VND) <span class="text-danger">*</span></label>
-                  <input type="number" class="form-control" id="startingPrice" min="0" step="1000" required />
+                  <label for="startingPrice" class="form-label"
+                    >Giá Khởi Điểm (VND)
+                    <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="startingPrice"
+                    min="0"
+                    step="1000"
+                    required
+                  />
                 </div>
 
                 <div class="col-md-6 mb-3">
-                  <label for="durationMinutes" class="form-label">Thời Lượng (phút)</label>
-                  <input type="number" class="form-control" id="durationMinutes" min="1" value="60" />
+                  <label for="durationMinutes" class="form-label"
+                    >Thời Lượng (phút)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="durationMinutes"
+                    min="1"
+                    value="60"
+                  />
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-md-6 mb-3">
-                  <label for="startTime" class="form-label">Thời Gian Bắt Đầu</label>
-                  <input type="datetime-local" class="form-control" id="startTime" />
+                  <label for="startTime" class="form-label"
+                    >Thời Gian Bắt Đầu</label
+                  >
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    id="startTime"
+                  />
                   <small class="text-muted">Để trống = bắt đầu ngay</small>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                  <label for="endTime" class="form-label">Thời Gian Kết Thúc</label>
-                  <input type="datetime-local" class="form-control" id="endTime" />
+                  <label for="endTime" class="form-label"
+                    >Thời Gian Kết Thúc</label
+                  >
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    id="endTime"
+                  />
                   <small class="text-muted">Hoặc dùng thời lượng</small>
                 </div>
               </div>
 
               <div class="mb-3">
                 <label for="imageUrl" class="form-label">URL Hình Ảnh</label>
-                <input type="url" class="form-control" id="imageUrl" placeholder="https://example.com/image.jpg" />
+                <input
+                  type="url"
+                  class="form-control"
+                  id="imageUrl"
+                  placeholder="https://example.com/image.jpg"
+                />
                 <small class="text-muted">Để trống sẽ dùng ảnh mặc định</small>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Hủy
+              </button>
               <button type="submit" class="btn btn-primary" id="submitBtn">
                 <i class="bi bi-save"></i> Lưu
               </button>
@@ -209,12 +295,22 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Chi Tiết Đấu Giá</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
           </div>
           <div class="modal-body">
             <div class="row">
               <div class="col-md-6">
-                <img id="detailImage" src="" class="img-fluid rounded mb-3" alt="Auction Image" style="max-height: 300px; width: 100%; object-fit: cover;" />
+                <img
+                  id="detailImage"
+                  src=""
+                  class="img-fluid rounded mb-3"
+                  alt="Auction Image"
+                  style="max-height: 300px; width: 100%; object-fit: cover"
+                />
                 <h4 id="detailTitle">-</h4>
                 <p id="detailDescription" class="text-muted">-</p>
               </div>
@@ -230,7 +326,9 @@
                   </tr>
                   <tr>
                     <th>Giá Hiện Tại:</th>
-                    <td id="detailCurrentPrice" class="text-success fw-bold">-</td>
+                    <td id="detailCurrentPrice" class="text-success fw-bold">
+                      -
+                    </td>
                   </tr>
                   <tr>
                     <th>Người Dẫn Đầu:</th>
@@ -261,10 +359,21 @@
             </div>
           </div>
           <div class="modal-footer">
-            <a id="detailViewLink" href="#" class="btn btn-primary" target="_blank">
+            <a
+              id="detailViewLink"
+              href="#"
+              class="btn btn-primary"
+              target="_blank"
+            >
               <i class="bi bi-eye"></i> Xem Trang Đấu Giá
             </a>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
           </div>
         </div>
       </div>
@@ -273,17 +382,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <!-- Admin Scripts -->
+    <script src="../js/admin-config.js"></script>
+    <script src="../js/admin-auth.js"></script>
+    <script src="../js/admin-main.js"></script>
     <script src="../js/admin-header.js"></script>
     <script>
       // Require admin authentication
-      if (!Auth.requireAdmin()) {
-        throw new Error('Unauthorized');
+      if (!AdminAuth.requireAdmin()) {
+        throw new Error("Unauthorized");
       }
 
       // Render admin header
-      renderAdminHeader('auctions');
+      renderAdminHeader("auctions");
 
       let allAuctions = [];
       let stompClient = null;
@@ -294,12 +405,15 @@
        */
       async function loadAuctions() {
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/auctions/all`, {
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions/all`,
+            {
+              credentials: "include",
+            }
+          );
 
           if (!response.ok) {
-            throw new Error('Failed to load auctions');
+            throw new Error("Failed to load auctions");
           }
 
           const result = await response.json();
@@ -309,11 +423,11 @@
             updateStatistics();
             displayAuctions(allAuctions);
           } else {
-            showError('Không thể tải danh sách đấu giá');
+            showError("Không thể tải danh sách đấu giá");
           }
         } catch (error) {
-          console.error('Error loading auctions:', error);
-          showError('Lỗi kết nối đến server');
+          console.error("Error loading auctions:", error);
+          showError("Lỗi kết nối đến server");
         }
       }
 
@@ -322,47 +436,59 @@
        */
       function updateStatistics() {
         const total = allAuctions.length;
-        const pending = allAuctions.filter(a => a.status === 'PENDING').length;
-        const active = allAuctions.filter(a => a.status === 'ACTIVE').length;
-        const ended = allAuctions.filter(a => a.status === 'ENDED').length;
+        const pending = allAuctions.filter(
+          (a) => a.status === "PENDING"
+        ).length;
+        const active = allAuctions.filter((a) => a.status === "ACTIVE").length;
+        const ended = allAuctions.filter((a) => a.status === "ENDED").length;
 
-        document.getElementById('totalAuctionsCount').textContent = total;
-        document.getElementById('pendingAuctionsCount').textContent = pending;
-        document.getElementById('activeAuctionsCount').textContent = active;
-        document.getElementById('endedAuctionsCount').textContent = ended;
+        document.getElementById("totalAuctionsCount").textContent = total;
+        document.getElementById("pendingAuctionsCount").textContent = pending;
+        document.getElementById("activeAuctionsCount").textContent = active;
+        document.getElementById("endedAuctionsCount").textContent = ended;
       }
 
       /**
        * Display auctions in table
        */
       function displayAuctions(auctions) {
-        const tbody = document.getElementById('auctionsTableBody');
+        const tbody = document.getElementById("auctionsTableBody");
 
         if (!auctions || auctions.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">Không có đấu giá</td></tr>';
+          tbody.innerHTML =
+            '<tr><td colspan="10" class="text-center text-muted">Không có đấu giá</td></tr>';
           return;
         }
 
-        tbody.innerHTML = '';
+        tbody.innerHTML = "";
 
-        auctions.forEach(auction => {
-          const row = document.createElement('tr');
-          const imageUrl = auction.imageUrl || 'https://via.placeholder.com/100';
+        auctions.forEach((auction) => {
+          const row = document.createElement("tr");
+          const imageUrl =
+            auction.imageUrl || "https://via.placeholder.com/100";
 
           row.innerHTML = `
             <td>${auction.id}</td>
             <td>
-              <img src="${imageUrl}" alt="${auction.title}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
+              <img src="${imageUrl}" alt="${
+            auction.title
+          }" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;" />
             </td>
             <td>
               <strong>${auction.title}</strong>
-              ${auction.description && auction.description.length > 50
-                ? '<br/><small class="text-muted">' + auction.description.substring(0, 50) + '...</small>'
-                : ''}
+              ${
+                auction.description && auction.description.length > 50
+                  ? '<br/><small class="text-muted">' +
+                    auction.description.substring(0, 50) +
+                    "...</small>"
+                  : ""
+              }
             </td>
             <td>${formatCurrency(auction.startPrice)}</td>
-            <td><strong class="text-success">${formatCurrency(auction.currentPrice)}</strong></td>
-            <td>${auction.sellerName || 'N/A'}</td>
+            <td><strong class="text-success">${formatCurrency(
+              auction.currentPrice
+            )}</strong></td>
+            <td>${auction.sellerName || "N/A"}</td>
             <td>${auction.totalBids || 0}</td>
             <td>${getStatusBadge(auction.status)}</td>
             <td>
@@ -373,29 +499,47 @@
             </td>
             <td>
               <div class="btn-group btn-group-sm" role="group">
-                <button class="btn btn-outline-primary" onclick="viewAuctionDetail(${auction.id})" title="Xem">
+                <button class="btn btn-outline-primary" onclick="viewAuctionDetail(${
+                  auction.id
+                })" title="Xem">
                   <i class="bi bi-eye"></i>
                 </button>
-                ${auction.status === 'PENDING' || auction.status === 'ENDED' ? `
+                ${
+                  auction.status === "PENDING" || auction.status === "ENDED"
+                    ? `
                   <button class="btn btn-outline-warning" onclick="openEditModal(${auction.id})" title="Sửa">
                     <i class="bi bi-pencil"></i>
                   </button>
-                ` : ''}
-                ${auction.status === 'PENDING' ? `
+                `
+                    : ""
+                }
+                ${
+                  auction.status === "PENDING"
+                    ? `
                   <button class="btn btn-outline-success" onclick="startAuction(${auction.id})" title="Bắt đầu">
                     <i class="bi bi-play"></i>
                   </button>
-                ` : ''}
-                ${auction.status === 'ACTIVE' ? `
+                `
+                    : ""
+                }
+                ${
+                  auction.status === "ACTIVE"
+                    ? `
                   <button class="btn btn-outline-danger" onclick="endAuction(${auction.id})" title="Kết thúc">
                     <i class="bi bi-stop"></i>
                   </button>
-                ` : ''}
-                ${auction.status === 'ENDED' || auction.status === 'PENDING' ? `
+                `
+                    : ""
+                }
+                ${
+                  auction.status === "ENDED" || auction.status === "PENDING"
+                    ? `
                   <button class="btn btn-outline-danger" onclick="deleteAuction(${auction.id})" title="Xóa">
                     <i class="bi bi-trash"></i>
                   </button>
-                ` : ''}
+                `
+                    : ""
+                }
               </div>
             </td>
           `;
@@ -408,38 +552,56 @@
        */
       async function viewAuctionDetail(auctionId) {
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/auctions/${auctionId}`, {
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/auctions/${auctionId}`,
+            {
+              credentials: "include",
+            }
+          );
 
           const result = await response.json();
 
           if (result.success) {
             const auction = result.data;
 
-            document.getElementById('detailId').textContent = auction.id;
-            document.getElementById('detailTitle').textContent = auction.title;
-            document.getElementById('detailDescription').textContent = auction.description || 'N/A';
-            document.getElementById('detailImage').src = auction.imageUrl || 'https://via.placeholder.com/400';
-            document.getElementById('detailStartPrice').textContent = formatCurrency(auction.startPrice);
-            document.getElementById('detailCurrentPrice').textContent = formatCurrency(auction.currentPrice);
-            document.getElementById('detailHighestBidder').textContent = auction.highestBidder || 'Chưa có';
-            document.getElementById('detailSeller').textContent = auction.sellerName || 'N/A';
-            document.getElementById('detailTotalBids').textContent = auction.totalBids || 0;
-            document.getElementById('detailStatus').innerHTML = getStatusBadge(auction.status);
-            document.getElementById('detailStartTime').textContent = formatDateTime(auction.startTime);
-            document.getElementById('detailEndTime').textContent = formatDateTime(auction.endTime);
-            document.getElementById('detailViewLink').href = `../auction-detail.html?id=${auction.id}`;
+            document.getElementById("detailId").textContent = auction.id;
+            document.getElementById("detailTitle").textContent = auction.title;
+            document.getElementById("detailDescription").textContent =
+              auction.description || "N/A";
+            document.getElementById("detailImage").src =
+              auction.imageUrl || "https://via.placeholder.com/400";
+            document.getElementById("detailStartPrice").textContent =
+              formatCurrency(auction.startPrice);
+            document.getElementById("detailCurrentPrice").textContent =
+              formatCurrency(auction.currentPrice);
+            document.getElementById("detailHighestBidder").textContent =
+              auction.highestBidder || "Chưa có";
+            document.getElementById("detailSeller").textContent =
+              auction.sellerName || "N/A";
+            document.getElementById("detailTotalBids").textContent =
+              auction.totalBids || 0;
+            document.getElementById("detailStatus").innerHTML = getStatusBadge(
+              auction.status
+            );
+            document.getElementById("detailStartTime").textContent =
+              formatDateTime(auction.startTime);
+            document.getElementById("detailEndTime").textContent =
+              formatDateTime(auction.endTime);
+            document.getElementById(
+              "detailViewLink"
+            ).href = `../auction-detail.html?id=${auction.id}`;
 
             // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('auctionDetailModal'));
+            const modal = new bootstrap.Modal(
+              document.getElementById("auctionDetailModal")
+            );
             modal.show();
           } else {
-            alert('Không thể tải thông tin đấu giá');
+            alert("Không thể tải thông tin đấu giá");
           }
         } catch (error) {
-          console.error('Error loading auction detail:', error);
-          alert('Lỗi khi tải thông tin đấu giá');
+          console.error("Error loading auction detail:", error);
+          alert("Lỗi khi tải thông tin đấu giá");
         }
       }
 
@@ -447,47 +609,60 @@
        * Apply filters
        */
       function applyFilters() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const statusFilter = document.getElementById('statusFilter').value;
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const statusFilter = document.getElementById("statusFilter").value;
 
         let filtered = allAuctions;
 
         if (searchTerm) {
-          filtered = filtered.filter(auction =>
-            auction.title.toLowerCase().includes(searchTerm) ||
-            (auction.description && auction.description.toLowerCase().includes(searchTerm)) ||
-            (auction.sellerName && auction.sellerName.toLowerCase().includes(searchTerm))
+          filtered = filtered.filter(
+            (auction) =>
+              auction.title.toLowerCase().includes(searchTerm) ||
+              (auction.description &&
+                auction.description.toLowerCase().includes(searchTerm)) ||
+              (auction.sellerName &&
+                auction.sellerName.toLowerCase().includes(searchTerm))
           );
         }
 
         if (statusFilter) {
-          filtered = filtered.filter(auction => auction.status === statusFilter);
+          filtered = filtered.filter(
+            (auction) => auction.status === statusFilter
+          );
         }
 
         displayAuctions(filtered);
       }
 
       // Add event listeners for filters
-      document.getElementById('searchInput').addEventListener('input', applyFilters);
-      document.getElementById('statusFilter').addEventListener('change', applyFilters);
+      document
+        .getElementById("searchInput")
+        .addEventListener("input", applyFilters);
+      document
+        .getElementById("statusFilter")
+        .addEventListener("change", applyFilters);
 
       /**
        * Get status badge HTML
        */
       function getStatusBadge(status) {
         const badges = {
-          'ACTIVE': '<span class="badge bg-success">Đang diễn ra</span>',
-          'PENDING': '<span class="badge bg-warning">Sắp diễn ra</span>',
-          'ENDED': '<span class="badge bg-secondary">Đã kết thúc</span>'
+          ACTIVE: '<span class="badge bg-success">Đang diễn ra</span>',
+          PENDING: '<span class="badge bg-warning">Sắp diễn ra</span>',
+          ENDED: '<span class="badge bg-secondary">Đã kết thúc</span>',
         };
-        return badges[status] || '<span class="badge bg-secondary">Unknown</span>';
+        return (
+          badges[status] || '<span class="badge bg-secondary">Unknown</span>'
+        );
       }
 
       /**
        * Show error message
        */
       function showError(message) {
-        const tbody = document.getElementById('auctionsTableBody');
+        const tbody = document.getElementById("auctionsTableBody");
         tbody.innerHTML = `<tr><td colspan="10" class="text-center text-danger">${message}</td></tr>`;
       }
 
@@ -495,35 +670,38 @@
        * Format currency
        */
       function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
+        return new Intl.NumberFormat("vi-VN").format(amount) + " VND";
       }
 
       /**
        * Format date (short)
        */
       function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleDateString('vi-VN');
+        if (!dateString) return "N/A";
+        return new Date(dateString).toLocaleDateString("vi-VN");
       }
 
       /**
        * Format date time (full)
        */
       function formatDateTime(dateString) {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleString('vi-VN');
+        if (!dateString) return "N/A";
+        return new Date(dateString).toLocaleString("vi-VN");
       }
 
       /**
        * Open create modal
        */
       function openCreateModal() {
-        document.getElementById('formModalTitle').textContent = 'Tạo Đấu Giá Mới';
-        document.getElementById('formMode').value = 'create';
-        document.getElementById('auctionForm').reset();
-        document.getElementById('auctionId').value = '';
+        document.getElementById("formModalTitle").textContent =
+          "Tạo Đấu Giá Mới";
+        document.getElementById("formMode").value = "create";
+        document.getElementById("auctionForm").reset();
+        document.getElementById("auctionId").value = "";
 
-        const modal = new bootstrap.Modal(document.getElementById('auctionFormModal'));
+        const modal = new bootstrap.Modal(
+          document.getElementById("auctionFormModal")
+        );
         modal.show();
       }
 
@@ -532,41 +710,53 @@
        */
       async function openEditModal(auctionId) {
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/auctions/${auctionId}`, {
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/auctions/${auctionId}`,
+            {
+              credentials: "include",
+            }
+          );
           const result = await response.json();
 
           if (result.success) {
             const auction = result.data;
 
-            document.getElementById('formModalTitle').textContent = 'Sửa Đấu Giá';
-            document.getElementById('formMode').value = 'edit';
-            document.getElementById('auctionId').value = auction.id;
-            document.getElementById('auctionTitle').value = auction.title;
-            document.getElementById('auctionDescription').value = auction.description;
-            document.getElementById('startingPrice').value = auction.startPrice;
-            document.getElementById('durationMinutes').value = auction.durationMinutes || 60;
-            document.getElementById('imageUrl').value = auction.imageUrl || '';
+            document.getElementById("formModalTitle").textContent =
+              "Sửa Đấu Giá";
+            document.getElementById("formMode").value = "edit";
+            document.getElementById("auctionId").value = auction.id;
+            document.getElementById("auctionTitle").value = auction.title;
+            document.getElementById("auctionDescription").value =
+              auction.description;
+            document.getElementById("startingPrice").value = auction.startPrice;
+            document.getElementById("durationMinutes").value =
+              auction.durationMinutes || 60;
+            document.getElementById("imageUrl").value = auction.imageUrl || "";
 
             // Format datetime for input
             if (auction.startTime) {
               const startDate = new Date(auction.startTime);
-              document.getElementById('startTime').value = startDate.toISOString().slice(0, 16);
+              document.getElementById("startTime").value = startDate
+                .toISOString()
+                .slice(0, 16);
             }
             if (auction.endTime) {
               const endDate = new Date(auction.endTime);
-              document.getElementById('endTime').value = endDate.toISOString().slice(0, 16);
+              document.getElementById("endTime").value = endDate
+                .toISOString()
+                .slice(0, 16);
             }
 
-            const modal = new bootstrap.Modal(document.getElementById('auctionFormModal'));
+            const modal = new bootstrap.Modal(
+              document.getElementById("auctionFormModal")
+            );
             modal.show();
           } else {
-            showToast('Không thể tải thông tin đấu giá', 'danger');
+            showToast("Không thể tải thông tin đấu giá", "danger");
           }
         } catch (error) {
-          console.error('Error loading auction:', error);
-          showToast('Lỗi khi tải thông tin đấu giá', 'danger');
+          console.error("Error loading auction:", error);
+          showToast("Lỗi khi tải thông tin đấu giá", "danger");
         }
       }
 
@@ -576,61 +766,71 @@
       async function handleSubmitAuction(event) {
         event.preventDefault();
 
-        const mode = document.getElementById('formMode').value;
-        const auctionId = document.getElementById('auctionId').value;
-        const title = document.getElementById('auctionTitle').value;
-        const description = document.getElementById('auctionDescription').value;
-        const startingPrice = document.getElementById('startingPrice').value;
-        const durationMinutes = document.getElementById('durationMinutes').value;
-        const startTime = document.getElementById('startTime').value;
-        const endTime = document.getElementById('endTime').value;
-        const imageUrl = document.getElementById('imageUrl').value;
+        const mode = document.getElementById("formMode").value;
+        const auctionId = document.getElementById("auctionId").value;
+        const title = document.getElementById("auctionTitle").value;
+        const description = document.getElementById("auctionDescription").value;
+        const startingPrice = document.getElementById("startingPrice").value;
+        const durationMinutes =
+          document.getElementById("durationMinutes").value;
+        const startTime = document.getElementById("startTime").value;
+        const endTime = document.getElementById("endTime").value;
+        const imageUrl = document.getElementById("imageUrl").value;
 
-        const submitBtn = document.getElementById('submitBtn');
+        const submitBtn = document.getElementById("submitBtn");
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+        submitBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
 
         try {
           let url, method;
           const formData = new URLSearchParams();
 
-          formData.append('title', title);
-          formData.append('description', description);
-          formData.append('startingPrice', startingPrice);
-          if (durationMinutes) formData.append('durationMinutes', durationMinutes);
-          if (imageUrl) formData.append('imageUrl', imageUrl);
+          formData.append("title", title);
+          formData.append("description", description);
+          formData.append("startingPrice", startingPrice);
+          if (durationMinutes)
+            formData.append("durationMinutes", durationMinutes);
+          if (imageUrl) formData.append("imageUrl", imageUrl);
 
-          if (mode === 'create') {
-            url = `${window.API_CONFIG.BASE_URL}/api/admin/auctions`;
-            method = 'POST';
-            if (startTime) formData.append('startTime', startTime);
-            if (endTime) formData.append('endTime', endTime);
+          if (mode === "create") {
+            url = `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions`;
+            method = "POST";
+            if (startTime) formData.append("startTime", startTime);
+            if (endTime) formData.append("endTime", endTime);
           } else {
-            url = `${window.API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}`;
-            method = 'PUT';
+            url = `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}`;
+            method = "PUT";
           }
 
           const response = await fetch(url, {
             method: method,
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
+              "Content-Type": "application/x-www-form-urlencoded",
             },
-            credentials: 'include',
-            body: formData
+            credentials: "include",
+            body: formData,
           });
 
           const result = await response.json();
 
           if (result.success) {
-            showToast(mode === 'create' ? 'Tạo đấu giá thành công!' : 'Cập nhật thành công!', 'success');
-            bootstrap.Modal.getInstance(document.getElementById('auctionFormModal')).hide();
+            showToast(
+              mode === "create"
+                ? "Tạo đấu giá thành công!"
+                : "Cập nhật thành công!",
+              "success"
+            );
+            bootstrap.Modal.getInstance(
+              document.getElementById("auctionFormModal")
+            ).hide();
             loadAuctions(); // Reload list
           } else {
-            showToast(result.message || 'Có lỗi xảy ra', 'danger');
+            showToast(result.message || "Có lỗi xảy ra", "danger");
           }
         } catch (error) {
-          console.error('Error submitting auction:', error);
-          showToast('Lỗi khi xử lý: ' + error.message, 'danger');
+          console.error("Error submitting auction:", error);
+          showToast("Lỗi khi xử lý: " + error.message, "danger");
         } finally {
           submitBtn.disabled = false;
           submitBtn.innerHTML = '<i class="bi bi-save"></i> Lưu';
@@ -641,27 +841,30 @@
        * Delete auction
        */
       async function deleteAuction(auctionId) {
-        if (!confirm('Bạn có chắc muốn xóa đấu giá này?')) {
+        if (!confirm("Bạn có chắc muốn xóa đấu giá này?")) {
           return;
         }
 
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}`, {
-            method: 'DELETE',
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}`,
+            {
+              method: "DELETE",
+              credentials: "include",
+            }
+          );
 
           const result = await response.json();
 
           if (result.success) {
-            showToast('Đã xóa đấu giá', 'success');
+            showToast("Đã xóa đấu giá", "success");
             loadAuctions();
           } else {
-            showToast(result.message || 'Không thể xóa', 'danger');
+            showToast(result.message || "Không thể xóa", "danger");
           }
         } catch (error) {
-          console.error('Error deleting auction:', error);
-          showToast('Lỗi khi xóa: ' + error.message, 'danger');
+          console.error("Error deleting auction:", error);
+          showToast("Lỗi khi xóa: " + error.message, "danger");
         }
       }
 
@@ -669,27 +872,30 @@
        * Start auction
        */
       async function startAuction(auctionId) {
-        if (!confirm('Bạn có chắc muốn bắt đầu đấu giá này?')) {
+        if (!confirm("Bạn có chắc muốn bắt đầu đấu giá này?")) {
           return;
         }
 
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}/start`, {
-            method: 'POST',
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}/start`,
+            {
+              method: "POST",
+              credentials: "include",
+            }
+          );
 
           const result = await response.json();
 
           if (result.success) {
-            showToast('Đã bắt đầu đấu giá', 'success');
+            showToast("Đã bắt đầu đấu giá", "success");
             loadAuctions();
           } else {
-            showToast(result.message || 'Không thể bắt đầu', 'danger');
+            showToast(result.message || "Không thể bắt đầu", "danger");
           }
         } catch (error) {
-          console.error('Error starting auction:', error);
-          showToast('Lỗi khi bắt đầu: ' + error.message, 'danger');
+          console.error("Error starting auction:", error);
+          showToast("Lỗi khi bắt đầu: " + error.message, "danger");
         }
       }
 
@@ -697,37 +903,40 @@
        * End auction
        */
       async function endAuction(auctionId) {
-        if (!confirm('Bạn có chắc muốn kết thúc đấu giá này?')) {
+        if (!confirm("Bạn có chắc muốn kết thúc đấu giá này?")) {
           return;
         }
 
         try {
-          const response = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}/end`, {
-            method: 'POST',
-            credentials: 'include'
-          });
+          const response = await fetch(
+            `${window.ADMIN_API_CONFIG.BASE_URL}/api/admin/auctions/${auctionId}/end`,
+            {
+              method: "POST",
+              credentials: "include",
+            }
+          );
 
           const result = await response.json();
 
           if (result.success) {
-            showToast('Đã kết thúc đấu giá', 'success');
+            showToast("Đã kết thúc đấu giá", "success");
             loadAuctions();
           } else {
-            showToast(result.message || 'Không thể kết thúc', 'danger');
+            showToast(result.message || "Không thể kết thúc", "danger");
           }
         } catch (error) {
-          console.error('Error ending auction:', error);
-          showToast('Lỗi khi kết thúc: ' + error.message, 'danger');
+          console.error("Error ending auction:", error);
+          showToast("Lỗi khi kết thúc: " + error.message, "danger");
         }
       }
 
       /**
        * Show toast notification
        */
-      function showToast(message, type = 'info') {
-        const toast = document.createElement('div');
+      function showToast(message, type = "info") {
+        const toast = document.createElement("div");
         toast.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
-        toast.style.zIndex = '9999';
+        toast.style.zIndex = "9999";
         toast.innerHTML = `
           ${message}
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -744,29 +953,30 @@
        */
       function connectWebSocket() {
         try {
-          const socket = new SockJS(window.API_CONFIG.WS_URL);
+          const socket = new SockJS(window.ADMIN_API_CONFIG.WS_URL);
           stompClient = Stomp.over(socket);
 
-          stompClient.connect({},
+          stompClient.connect(
+            {},
             (frame) => {
-              console.log('Admin WebSocket Connected:', frame);
+              console.log("Admin WebSocket Connected:", frame);
               wsConnected = true;
 
               // Subscribe to auction events
-              stompClient.subscribe('/topic/auctions', (message) => {
+              stompClient.subscribe("/topic/auctions", (message) => {
                 const event = JSON.parse(message.body);
                 handleAuctionEvent(event);
               });
             },
             (error) => {
-              console.error('Admin WebSocket Error:', error);
+              console.error("Admin WebSocket Error:", error);
               wsConnected = false;
               // Try to reconnect after 5 seconds
               setTimeout(() => connectWebSocket(), 5000);
             }
           );
         } catch (error) {
-          console.error('Error connecting to WebSocket:', error);
+          console.error("Error connecting to WebSocket:", error);
         }
       }
 
@@ -774,33 +984,33 @@
        * Handle auction events from WebSocket
        */
       function handleAuctionEvent(event) {
-        console.log('Admin received auction event:', event);
+        console.log("Admin received auction event:", event);
 
         // Reload auctions to reflect changes
         loadAuctions();
 
         // Show notification based on event type
         switch (event.type) {
-          case 'AUCTION_CREATED':
-            showToast('✅ Đấu giá mới đã được tạo: ' + event.title, 'success');
+          case "AUCTION_CREATED":
+            showToast("✅ Đấu giá mới đã được tạo: " + event.title, "success");
             break;
-          case 'AUCTION_STARTED':
-            showToast('🚀 Đấu giá đã bắt đầu: ' + event.title, 'info');
+          case "AUCTION_STARTED":
+            showToast("🚀 Đấu giá đã bắt đầu: " + event.title, "info");
             break;
-          case 'AUCTION_ENDED':
-            showToast('🏁 Đấu giá đã kết thúc: ' + event.title, 'warning');
+          case "AUCTION_ENDED":
+            showToast("🏁 Đấu giá đã kết thúc: " + event.title, "warning");
             break;
         }
       }
 
       // Load auctions on page load
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener("DOMContentLoaded", () => {
         loadAuctions();
         connectWebSocket();
       });
 
       // Cleanup WebSocket on page unload
-      window.addEventListener('beforeunload', () => {
+      window.addEventListener("beforeunload", () => {
         if (stompClient && wsConnected) {
           stompClient.disconnect();
         }

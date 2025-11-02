@@ -188,10 +188,17 @@ npm install
 
 # Chạy static web server
 npm start
+<<<<<<< HEAD
 # Hoặc: npx http-server public -p 3000
 ```
 
 Client sẽ chạy tại: **http://localhost:3000**
+=======
+# Hoặc: npx http-server public -p 8080
+```
+
+Client sẽ chạy tại: **http://localhost:8080**
+>>>>>>> test3
 
 **Cấu hình API endpoint (nếu cần):**
 
@@ -210,8 +217,13 @@ window.API_CONFIG = {
 
 🌐 **Mở browser và truy cập:**
 
+<<<<<<< HEAD
 - **Trang chủ:** http://localhost:3000
 - **Login:** http://localhost:3000/login.html
+=======
+- **Trang chủ:** http://localhost:8080
+- **Login:** http://localhost:8080/login.html
+>>>>>>> test3
 
 **Đăng nhập với:**
 

@@ -4,38 +4,49 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Auction System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-    <style>
-      .stat-card {
-        transition: transform 0.2s;
-      }
-      .stat-card:hover {
-        transform: translateY(-5px);
-      }
-      .stat-icon {
-        font-size: 2.5rem;
-      }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <!-- Admin Custom CSS -->
+    <link rel="stylesheet" href="../css/admin-style.css" />
   </head>
-  <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <body class="admin-panel">
+    <!-- Admin Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark admin-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="dashboard.html">👑 Admin Panel</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <a class="navbar-brand" href="dashboard.html">
+          <i class="bi bi-shield-check"></i> Admin Panel
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="dashboard.html">Dashboard</a>
+              <a class="nav-link active" href="dashboard.html">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="auctions.html">Quản Lý Đấu Giá</a>
+              <a class="nav-link" href="auctions.html">
+                <i class="bi bi-hammer"></i> Quản Lý Đấu Giá
+              </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="users.html">Quản Lý Users</a>
+              <a class="nav-link" href="users.html">
+                <i class="bi bi-people"></i> Quản Lý Users
+              </a>
             </li>
           </ul>
           <ul class="navbar-nav">
@@ -45,12 +56,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <span class="nav-link text-warning">
-                <i class="bi bi-person-badge"></i> <span id="adminName">Admin</span>
+              <span class="nav-link">
+                <i class="bi bi-person-badge"></i>
+                <span class="admin-username">Admin</span>
               </span>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#" onclick="Auth.logout()">
+              <a class="nav-link admin-logout-btn" href="#">
                 <i class="bi bi-box-arrow-right"></i> Đăng xuất
               </a>
             </li>
@@ -59,115 +71,103 @@
       </div>
     </nav>
 
-    <div class="container-fluid py-4">
-      <h2 class="mb-4">📊 Admin Dashboard</h2>
+    <!-- Main Container -->
+    <div class="container-fluid admin-container">
+      <!-- Page Header -->
+      <div class="admin-page-header">
+        <h1><i class="bi bi-speedometer2"></i> Admin Dashboard</h1>
+        <p class="text-muted">Tổng quan hệ thống đấu giá trực tuyến</p>
+      </div>
 
       <!-- Statistics Cards -->
       <div class="row g-4 mb-4">
         <div class="col-md-3">
-          <div class="card stat-card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="text-muted mb-1">Tổng Users</h6>
-                  <h3 class="mb-0" id="totalUsers">0</h3>
-                </div>
-                <div class="stat-icon text-primary">
-                  <i class="bi bi-people-fill"></i>
-                </div>
-              </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-people-fill"></i>
             </div>
+            <div class="stat-value" id="totalUsers">0</div>
+            <div class="stat-label">Tổng Users</div>
           </div>
         </div>
 
         <div class="col-md-3">
-          <div class="card stat-card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="text-muted mb-1">Tổng Đấu Giá</h6>
-                  <h3 class="mb-0" id="totalAuctions">0</h3>
-                </div>
-                <div class="stat-icon text-success">
-                  <i class="bi bi-hammer"></i>
-                </div>
-              </div>
+          <div class="stat-card stat-success">
+            <div class="stat-icon">
+              <i class="bi bi-hammer"></i>
             </div>
+            <div class="stat-value" id="totalAuctions">0</div>
+            <div class="stat-label">Tổng Đấu Giá</div>
           </div>
         </div>
 
         <div class="col-md-3">
-          <div class="card stat-card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="text-muted mb-1">Đang Diễn Ra</h6>
-                  <h3 class="mb-0" id="activeAuctions">0</h3>
-                </div>
-                <div class="stat-icon text-warning">
-                  <i class="bi bi-clock-fill"></i>
-                </div>
-              </div>
+          <div class="stat-card stat-warning">
+            <div class="stat-icon">
+              <i class="bi bi-clock-fill"></i>
             </div>
+            <div class="stat-value" id="activeAuctions">0</div>
+            <div class="stat-label">Đang Diễn Ra</div>
           </div>
         </div>
 
         <div class="col-md-3">
-          <div class="card stat-card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="text-muted mb-1">Tổng Bids</h6>
-                  <h3 class="mb-0" id="totalBids">0</h3>
-                </div>
-                <div class="stat-icon text-info">
-                  <i class="bi bi-graph-up-arrow"></i>
-                </div>
-              </div>
+          <div class="stat-card stat-info">
+            <div class="stat-icon">
+              <i class="bi bi-graph-up-arrow"></i>
             </div>
+            <div class="stat-value" id="totalBids">0</div>
+            <div class="stat-label">Tổng Bids</div>
           </div>
         </div>
       </div>
 
-      <div class="row">
-        <!-- Recent Auctions -->
-        <div class="col-lg-8">
-          <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-              <h5 class="mb-0">📋 Đấu Giá Gần Đây</h5>
+      <!-- Additional Stats Row -->
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="card admin-card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0"><i class="bi bi-people"></i> Thống Kê Users</h5>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Tiêu Đề</th>
-                      <th>Giá Hiện Tại</th>
-                      <th>Trạng Thái</th>
-                      <th>Người Bán</th>
-                      <th>Hành Động</th>
-                    </tr>
-                  </thead>
-                  <tbody id="recentAuctionsTable">
-                    <tr>
-                      <td colspan="6" class="text-center">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                        Loading...
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Hoạt động:</span>
+                <strong id="activeUsers" class="text-success">0</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Bị khóa:</span>
+                <strong id="bannedUsers" class="text-danger">0</strong>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Quick Actions & Stats -->
-        <div class="col-lg-4">
-          <div class="card shadow-sm mb-3">
-            <div class="card-header bg-success text-white">
-              <h5 class="mb-0">⚡ Quick Actions</h5>
+        <div class="col-md-4">
+          <div class="card admin-card">
+            <div class="card-header bg-warning text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-hammer"></i> Trạng Thái Đấu Giá
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span>Chờ bắt đầu:</span>
+                <strong id="pendingAuctions" class="text-warning">0</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Đã kết thúc:</span>
+                <strong id="endedAuctions" class="text-muted">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card admin-card">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-lightning-charge"></i> Quick Actions
+              </h5>
             </div>
             <div class="card-body d-grid gap-2">
               <a href="auctions.html" class="btn btn-outline-primary">
@@ -176,28 +176,34 @@
               <a href="users.html" class="btn btn-outline-secondary">
                 <i class="bi bi-person-plus"></i> Quản Lý Users
               </a>
-              <a href="../dashboard.html" class="btn btn-outline-info">
-                <i class="bi bi-eye"></i> Xem Trang Chủ
-              </a>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div class="card shadow-sm">
-            <div class="card-header bg-warning">
-              <h5 class="mb-0">📈 Thống Kê Theo Trạng Thái</h5>
+      <!-- Financial Stats -->
+      <div class="row g-4">
+        <div class="col-md-12">
+          <div class="card admin-card">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-cash-stack"></i> Thống Kê Tài Chính
+              </h5>
             </div>
             <div class="card-body">
-              <div class="d-flex justify-content-between mb-2">
-                <span>Sắp diễn ra:</span>
-                <strong id="pendingCount" class="text-warning">0</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Đang diễn ra:</span>
-                <strong id="activeCount" class="text-success">0</strong>
-              </div>
-              <div class="d-flex justify-content-between">
-                <span>Đã kết thúc:</span>
-                <strong id="endedCount" class="text-muted">0</strong>
+              <div class="row">
+                <div class="col-md-4">
+                  <h6 class="text-muted">Tổng Giá Trị Bid</h6>
+                  <h4 id="totalBidValue" class="text-success">0 VND</h4>
+                </div>
+                <div class="col-md-4">
+                  <h6 class="text-muted">Giá Trị Đấu Giá Đang Diễn Ra</h6>
+                  <h4 id="activeAuctionValue" class="text-warning">0 VND</h4>
+                </div>
+                <div class="col-md-4">
+                  <h6 class="text-muted">Số Dư Users Trong Hệ Thống</h6>
+                  <h4 id="totalUserBalance" class="text-info">0 VND</h4>
+                </div>
               </div>
             </div>
           </div>
@@ -205,135 +211,17 @@
       </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/admin-header.js"></script>
-    <script>
-      // Require admin authentication
-      if (!Auth.requireAdmin()) {
-        throw new Error('Unauthorized');
-      }
+    <!-- SockJS & STOMP -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 
-      // Render admin header
-      renderAdminHeader('dashboard');
-
-      /**
-       * Load dashboard statistics
-       */
-      async function loadStatistics() {
-        try {
-          // Load users count
-          const usersResponse = await fetch(`${window.API_CONFIG.BASE_URL}/api/admin/users`, {
-            credentials: 'include'
-          });
-
-          if (usersResponse.ok) {
-            const usersResult = await usersResponse.json();
-            if (usersResult.success) {
-              document.getElementById('totalUsers').textContent = usersResult.data.length || 0;
-            }
-          }
-
-          // Load auctions
-          const auctionsResponse = await fetch(`${window.API_CONFIG.BASE_URL}/api/auctions`, {
-            credentials: 'include'
-          });
-
-          if (auctionsResponse.ok) {
-            const auctionsResult = await auctionsResponse.json();
-            if (auctionsResult.success) {
-              const auctions = auctionsResult.data || [];
-
-              document.getElementById('totalAuctions').textContent = auctions.length;
-
-              const activeAuctions = auctions.filter(a => a.status === 'ACTIVE');
-              const pendingAuctions = auctions.filter(a => a.status === 'PENDING');
-              const endedAuctions = auctions.filter(a => a.status === 'ENDED');
-
-              document.getElementById('activeAuctions').textContent = activeAuctions.length;
-              document.getElementById('activeCount').textContent = activeAuctions.length;
-              document.getElementById('pendingCount').textContent = pendingAuctions.length;
-              document.getElementById('endedCount').textContent = endedAuctions.length;
-
-              // Display recent auctions
-              displayRecentAuctions(auctions.slice(0, 10));
-            }
-          }
-
-          // Load total bids count (estimate from auctions)
-          let totalBids = 0;
-          const auctionsForBids = await fetch(`${window.API_CONFIG.BASE_URL}/api/auctions`, {
-            credentials: 'include'
-          });
-
-          if (auctionsForBids.ok) {
-            const result = await auctionsForBids.json();
-            if (result.success) {
-              totalBids = (result.data || []).reduce((sum, auction) => sum + (auction.totalBids || 0), 0);
-              document.getElementById('totalBids').textContent = totalBids;
-            }
-          }
-
-        } catch (error) {
-          console.error('Error loading statistics:', error);
-        }
-      }
-
-      /**
-       * Display recent auctions table
-       */
-      function displayRecentAuctions(auctions) {
-        const tbody = document.getElementById('recentAuctionsTable');
-
-        if (!auctions || auctions.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Không có dữ liệu</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = '';
-
-        auctions.forEach(auction => {
-          const statusBadge = getStatusBadge(auction.status);
-          const row = `
-            <tr>
-              <td>${auction.id}</td>
-              <td>${auction.title}</td>
-              <td>${formatCurrency(auction.currentPrice)}</td>
-              <td>${statusBadge}</td>
-              <td>${auction.sellerName || 'N/A'}</td>
-              <td>
-                <a href="../auction-detail.html?id=${auction.id}" class="btn btn-sm btn-outline-primary" title="Xem">
-                  <i class="bi bi-eye"></i>
-                </a>
-              </td>
-            </tr>
-          `;
-          tbody.innerHTML += row;
-        });
-      }
-
-      /**
-       * Get status badge HTML
-       */
-      function getStatusBadge(status) {
-        const badges = {
-          'ACTIVE': '<span class="badge bg-success">Đang diễn ra</span>',
-          'PENDING': '<span class="badge bg-warning">Sắp diễn ra</span>',
-          'ENDED': '<span class="badge bg-secondary">Đã kết thúc</span>'
-        };
-        return badges[status] || '<span class="badge bg-secondary">Unknown</span>';
-      }
-
-      /**
-       * Format currency
-       */
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + ' VND';
-      }
-
-      // Load data on page load
-      document.addEventListener('DOMContentLoaded', loadStatistics);
-    </script>
+    <!-- Admin Scripts -->
+    <script src="../js/admin-config.js"></script>
+    <script src="../js/admin-auth.js"></script>
+    <script src="../js/admin-main.js"></script>
+    <script src="../js/admin-websocket.js"></script>
+    <script src="../js/admin-dashboard.js"></script>
   </body>
 </html>

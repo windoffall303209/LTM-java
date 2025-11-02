@@ -4,17 +4,16 @@ import com.auction.dto.ApiResponse;
 import com.auction.dto.AuctionDTO;
 import com.auction.dto.UserDTO;
 import com.auction.model.Auction;
-import com.auction.service.AuctionService;
-import com.auction.service.UserService;
+import com.auction.service.AdminAuctionService;
+import com.auction.service.AdminStatisticsService;
+import com.auction.service.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +27,9 @@ import java.util.Map;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
 
-    private final AuctionService auctionService;
-    private final UserService userService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final AdminAuctionService adminAuctionService;
+    private final AdminUserService adminUserService;
+    private final AdminStatisticsService adminStatisticsService;
 
     // ==================== AUCTION MANAGEMENT ====================
 
@@ -80,11 +79,8 @@ public class AdminController {
             auction.setEndTime(end);
             auction.setDurationMinutes((int) java.time.Duration.between(start, end).toMinutes());
 
-            Auction created = auctionService.createAuction(auction);
-            
-            // Broadcast auction created event
-            broadcastAuctionCreated(created);
-            
+            Auction created = adminAuctionService.createAuction(auction);
+
             return ResponseEntity.ok(ApiResponse.success("Tạo đấu giá thành công!", created));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -105,15 +101,14 @@ public class AdminController {
             @RequestParam(required = false) Integer durationMinutes,
             @RequestParam(required = false) String imageUrl) {
         try {
-            Auction auction = auctionService.getAuctionById(id);
+            Auction updatedData = new Auction();
+            updatedData.setTitle(title);
+            updatedData.setDescription(description);
+            updatedData.setStartingPrice(startingPrice);
+            updatedData.setDurationMinutes(durationMinutes);
+            updatedData.setImageUrl(imageUrl);
 
-            if (title != null) auction.setTitle(title);
-            if (description != null) auction.setDescription(description);
-            if (startingPrice != null) auction.setStartingPrice(startingPrice);
-            if (durationMinutes != null) auction.setDurationMinutes(durationMinutes);
-            if (imageUrl != null) auction.setImageUrl(imageUrl);
-
-            Auction updated = auctionService.updateAuction(auction);
+            Auction updated = adminAuctionService.updateAuction(id, updatedData);
             return ResponseEntity.ok(ApiResponse.success("Cập nhật thành công!", updated));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -128,7 +123,7 @@ public class AdminController {
     @DeleteMapping("/auctions/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteAuction(@PathVariable Long id) {
         try {
-            auctionService.deleteAuction(id);
+            adminAuctionService.deleteAuction(id);
             return ResponseEntity.ok(ApiResponse.success("Đã xóa auction"));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -143,7 +138,7 @@ public class AdminController {
     @GetMapping("/auctions/all")
     public ResponseEntity<ApiResponse<List<AuctionDTO>>> getAllAuctions() {
         try {
-            List<AuctionDTO> auctions = auctionService.getAllAuctions();
+            List<AuctionDTO> auctions = adminAuctionService.getAllAuctions();
             return ResponseEntity.ok(ApiResponse.success("Lấy danh sách thành công", auctions));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -158,12 +153,7 @@ public class AdminController {
     @PostMapping("/auctions/{id}/start")
     public ResponseEntity<ApiResponse<Void>> startAuction(@PathVariable Long id) {
         try {
-            auctionService.startAuction(id);
-
-            // Broadcast auction started event
-            Auction auction = auctionService.getAuctionById(id);
-            broadcastAuctionStarted(auction);
-
+            adminAuctionService.startAuction(id);
             return ResponseEntity.ok(ApiResponse.success("Đã bắt đầu auction"));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -178,12 +168,7 @@ public class AdminController {
     @PostMapping("/auctions/{id}/end")
     public ResponseEntity<ApiResponse<Void>> endAuction(@PathVariable Long id) {
         try {
-            auctionService.endAuction(id);
-
-            // Broadcast auction ended event
-            Auction auction = auctionService.getAuctionById(id);
-            broadcastAuctionEnded(auction);
-
+            adminAuctionService.endAuction(id);
             return ResponseEntity.ok(ApiResponse.success("Đã kết thúc auction"));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -200,7 +185,7 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<List<UserDTO>>> getAllUsers() {
         try {
-            List<UserDTO> users = userService.getAllUsers();
+            List<UserDTO> users = adminUserService.getAllUsers();
             return ResponseEntity.ok(ApiResponse.success("Lấy danh sách thành công", users));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -215,7 +200,7 @@ public class AdminController {
     @PostMapping("/users/{id}/toggle-status")
     public ResponseEntity<ApiResponse<Void>> toggleUserStatus(@PathVariable Long id) {
         try {
-            userService.toggleUserStatus(id);
+            adminUserService.toggleUserStatus(id);
             return ResponseEntity.ok(ApiResponse.success("Đã cập nhật trạng thái user"));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -232,7 +217,7 @@ public class AdminController {
             @PathVariable Long id,
             @RequestParam BigDecimal amount) {
         try {
-            userService.updateBalance(id, amount);
+            adminUserService.updateBalance(id, amount);
             return ResponseEntity.ok(ApiResponse.success("Đã cập nhật số dư"));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -249,25 +234,7 @@ public class AdminController {
     @GetMapping("/statistics")
     public ResponseEntity<ApiResponse<Object>> getStatistics() {
         try {
-            // Tạo object thống kê
-            var stats = new java.util.HashMap<String, Object>();
-            
-            List<UserDTO> users = userService.getAllUsers();
-            List<AuctionDTO> auctions = auctionService.getAllAuctions();
-            
-            stats.put("totalUsers", users.size());
-            stats.put("activeUsers", users.stream().filter(u -> u.getIsActive()).count());
-            stats.put("totalAuctions", auctions.size());
-            stats.put("activeAuctions", auctions.stream()
-                    .filter(a -> "ACTIVE".equals(a.getStatus())).count());
-            stats.put("endedAuctions", auctions.stream()
-                    .filter(a -> "ENDED".equals(a.getStatus())).count());
-            
-            BigDecimal totalBidValue = auctions.stream()
-                    .map(AuctionDTO::getCurrentPrice)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            stats.put("totalBidValue", totalBidValue);
-
+            Map<String, Object> stats = adminStatisticsService.getSystemStatistics();
             return ResponseEntity.ok(ApiResponse.success("Lấy thống kê thành công", stats));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
@@ -275,48 +242,5 @@ public class AdminController {
         }
     }
 
-    // ==================== HELPER METHODS ====================
-
-    /**
-     * Broadcast auction created event qua WebSocket
-     */
-    private void broadcastAuctionCreated(Auction auction) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("type", "AUCTION_CREATED");
-        message.put("auctionId", auction.getAuctionId());
-        message.put("title", auction.getTitle());
-        message.put("status", auction.getStatus().toString());
-        message.put("startTime", auction.getStartTime());
-
-        messagingTemplate.convertAndSend("/topic/auctions", message);
-    }
-
-    /**
-     * Broadcast auction started event qua WebSocket
-     */
-    private void broadcastAuctionStarted(Auction auction) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("type", "AUCTION_STARTED");
-        message.put("auctionId", auction.getAuctionId());
-        message.put("title", auction.getTitle());
-        message.put("status", auction.getStatus().toString());
-        message.put("startTime", auction.getStartTime());
-
-        messagingTemplate.convertAndSend("/topic/auctions", message);
-    }
-
-    /**
-     * Broadcast auction ended event qua WebSocket
-     */
-    private void broadcastAuctionEnded(Auction auction) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("type", "AUCTION_ENDED");
-        message.put("auctionId", auction.getAuctionId());
-        message.put("title", auction.getTitle());
-        message.put("status", auction.getStatus().toString());
-        message.put("endTime", auction.getEndTime());
-
-        messagingTemplate.convertAndSend("/topic/auctions", message);
-    }
 }
 

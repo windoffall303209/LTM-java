@@ -1,6 +1,7 @@
 # Client Migration Summary - Thymeleaf to JavaScript
 
 ## Overview
+
 All HTML files in the Client/public directory have been successfully migrated from Thymeleaf server-side rendering to client-side JavaScript with REST API integration.
 
 ---
@@ -8,12 +9,14 @@ All HTML files in the Client/public directory have been successfully migrated fr
 ## ✅ Completed Files
 
 ### 1. **index.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Added JavaScript to fetch auctions from API
 - ✅ Dynamic rendering of auction cards
 - **API Used:** `GET /api/auctions/active`
 
 ### 2. **login.html**
+
 - ✅ Removed Thymeleaf form action
 - ✅ Added JavaScript login handler
 - ✅ Stores user info in localStorage
@@ -21,6 +24,7 @@ All HTML files in the Client/public directory have been successfully migrated fr
 - **API Used:** `POST /api/auth/login`
 
 ### 3. **register.html**
+
 - ✅ Removed Thymeleaf form action
 - ✅ Added JavaScript registration handler
 - ✅ Form validation
@@ -28,6 +32,7 @@ All HTML files in the Client/public directory have been successfully migrated fr
 - **API Used:** `POST /api/auth/register`
 
 ### 4. **dashboard.html**
+
 - ✅ Removed all Thymeleaf expressions (th:text, th:if, th:each, etc.)
 - ✅ Created separate `dashboard.js` for complex logic
 - ✅ Dynamic user info display
@@ -38,6 +43,7 @@ All HTML files in the Client/public directory have been successfully migrated fr
   - `GET /api/auctions/active` - Load auctions
 
 ### 5. **auction-detail.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Uses existing `auction.js` for WebSocket
 - ✅ Fetches auction details from API
@@ -49,6 +55,7 @@ All HTML files in the Client/public directory have been successfully migrated fr
   - `WS /ws` - WebSocket for real-time updates
 
 ### 6. **my-bids.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Added JavaScript to fetch user's bid history
 - ✅ Display bids in table format
@@ -56,24 +63,28 @@ All HTML files in the Client/public directory have been successfully migrated fr
 - **TODO:** Pagination for large datasets
 
 ### 7. **watchlist.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Basic structure with API integration
 - **API Used:** `GET /api/watchlist/user/{userId}`
 - **TODO:** Complete watchlist CRUD operations
 
 ### 8. **admin/dashboard.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Admin role check
 - ✅ Basic layout
 - **TODO:** Implement statistics API integration
 
 ### 9. **admin/auctions.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Admin role check
 - ✅ Basic layout
 - **TODO:** Implement auction CRUD operations
 
 ### 10. **admin/users.html**
+
 - ✅ Removed Thymeleaf syntax
 - ✅ Admin role check
 - ✅ Basic layout
@@ -84,23 +95,27 @@ All HTML files in the Client/public directory have been successfully migrated fr
 ## 📁 New JavaScript Files Created
 
 ### 1. **js/config.js**
+
 - API configuration
 - Base URL: `http://localhost:8000`
 - WebSocket URL: `http://localhost:8000/ws`
 
 ### 2. **js/main.js**
+
 - Common application logic
 - Authentication helpers
 - Login/Register form handlers
 - Index page auction rendering
 
 ### 3. **js/dashboard.js**
+
 - Dashboard-specific functionality
 - User info loading
 - Auction filtering
 - Statistics calculation
 
 ### 4. **js/auction.js** (Already existed, updated)
+
 - WebSocket integration
 - Real-time bid updates
 - Auction manager class
@@ -113,21 +128,24 @@ All HTML files in the Client/public directory have been successfully migrated fr
 ### 1. **Thymeleaf → JavaScript Mapping**
 
 **Before (Thymeleaf):**
+
 ```html
 <span th:text="${user.username}">Username</span>
 ```
 
 **After (JavaScript):**
+
 ```html
 <span id="userName">Username</span>
 <script>
-  document.getElementById('userName').textContent = user.username;
+  document.getElementById("userName").textContent = user.username;
 </script>
 ```
 
 ### 2. **Dynamic Lists**
 
 **Before (Thymeleaf):**
+
 ```html
 <div th:each="auction : ${auctions}">
   <h5 th:text="${auction.title}">Title</h5>
@@ -135,8 +153,9 @@ All HTML files in the Client/public directory have been successfully migrated fr
 ```
 
 **After (JavaScript):**
+
 ```javascript
-auctions.forEach(auction => {
+auctions.forEach((auction) => {
   html += `<h5>${auction.title}</h5>`;
 });
 container.innerHTML = html;
@@ -145,14 +164,16 @@ container.innerHTML = html;
 ### 3. **Conditional Rendering**
 
 **Before (Thymeleaf):**
+
 ```html
 <div th:if="${isAdmin}">Admin Content</div>
 ```
 
 **After (JavaScript):**
+
 ```javascript
-if (user.role === 'ADMIN') {
-  element.style.display = 'block';
+if (user.role === "ADMIN") {
+  element.style.display = "block";
 }
 ```
 
@@ -171,16 +192,19 @@ All pages now communicate with the backend at `http://localhost:8000` via:
 ## 📝 TODO Items
 
 ### High Priority
+
 1. ✅ **my-bids.html** - Add pagination for large bid lists
 2. ✅ **watchlist.html** - Implement add/remove watchlist functionality
 3. ✅ **dashboard.js** - Fetch actual user statistics from API
 
 ### Medium Priority
+
 4. ✅ **admin/dashboard.html** - Implement admin statistics dashboard
 5. ✅ **admin/auctions.html** - Complete auction CRUD interface
 6. ✅ **admin/users.html** - Complete user management interface
 
 ### Low Priority
+
 7. Implement error handling for network failures
 8. Add loading spinners for all API calls
 9. Implement client-side form validation
