@@ -3,8 +3,8 @@
  * Cấu hình riêng cho Admin Panel
  */
 
-const ADMIN_API_BASE_URL = 'http://localhost:8000';
-const ADMIN_WS_URL = 'http://localhost:8000/ws';
+const ADMIN_API_BASE_URL = 'http://127.0.0.1:8000';
+const ADMIN_WS_URL = 'http://127.0.0.1:8000/ws';
 
 // Export for use in admin scripts
 window.ADMIN_API_CONFIG = {

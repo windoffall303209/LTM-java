@@ -10,8 +10,8 @@
  */
 
 // URL backend API (thay đổi khi deploy production)
-const API_BASE_URL = 'http://localhost:8000';
-const WS_URL = 'http://localhost:8000/ws';
+const API_BASE_URL = 'http://127.0.0.1:8000';
+const WS_URL = 'http://127.0.0.1:8000/ws';
 
 // Export để sử dụng ở các file khác
 window.API_CONFIG = {

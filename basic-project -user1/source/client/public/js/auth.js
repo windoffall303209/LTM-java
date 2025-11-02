@@ -1,129 +1,106 @@
 /**
- * File: auth.js
- * Utilities cho authentication và authorization
- *
- * Cung cấp các functions:
- * - Kiểm tra login status
- * - Lưu/xóa auth data
- * - Redirect dựa trên role
- * - Helpers để protect pages
+ * Authentication Utility
+ * Provides consistent authentication checks across all pages
  */
 
-/**
- * Kiểm tra user đã đăng nhập chưa
- * @returns {boolean} true nếu đã login
- */
-function isAuthenticated() {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    return token !== null && user !== null;
-}
+const Auth = {
+  /**
+   * Check if user is logged in
+   */
+  isLoggedIn() {
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    return !!(userId && username);
+  },
 
-/**
- * Lấy thông tin user hiện tại
- * @returns {Object|null} User object hoặc null
- */
-function getCurrentUser() {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-}
+  /**
+   * Check if user is admin
+   */
+  isAdmin() {
+    const userRole = localStorage.getItem('userRole');
+    return userRole === 'ADMIN';
+  },
 
-/**
- * Lấy JWT token
- * @returns {string|null}
- */
-function getToken() {
-    return localStorage.getItem('token');
-}
+  /**
+   * Get current user ID
+   */
+  getUserId() {
+    return parseInt(localStorage.getItem('userId')) || null;
+  },
 
-/**
- * Kiểm tra user hiện tại có phải admin không
- * @returns {boolean}
- */
-function isAdmin() {
-    const user = getCurrentUser();
-    return user && user.role === 'ADMIN';
-}
+  /**
+   * Get current username
+   */
+  getUsername() {
+    return localStorage.getItem('username') || null;
+  },
 
-/**
- * Kiểm tra user hiện tại có phải user thường không
- * @returns {boolean}
- */
-function isUser() {
-    const user = getCurrentUser();
-    return user && user.role === 'USER';
-}
+  /**
+   * Get current user role
+   */
+  getUserRole() {
+    return localStorage.getItem('userRole') || 'USER';
+  },
 
-/**
- * Lưu auth data vào localStorage
- * @param {string} token - JWT token
- * @param {Object} user - User object
- */
-function saveAuth(token, user) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-}
-
-/**
- * Xóa auth data khỏi localStorage
- */
-function clearAuth() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-}
-
-/**
- * Require authentication
- * Redirect to login nếu chưa đăng nhập
- * @returns {boolean} true nếu đã login
- */
-function requireAuth() {
-    if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-        return false;
+  /**
+   * Require authentication - redirect to login if not logged in
+   */
+  requireAuth() {
+    if (!this.isLoggedIn()) {
+      console.warn('Not authenticated, redirecting to login...');
+      window.location.href = '/login.html';
+      return false;
     }
     return true;
-}
+  },
 
-/**
- * Require admin role
- * Redirect nếu không phải admin
- * @returns {boolean} true nếu là admin
- */
-function requireAdmin() {
-    if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-        return false;
+  /**
+   * Require admin - redirect to dashboard if not admin
+   */
+  requireAdmin() {
+    if (!this.isLoggedIn()) {
+      console.warn('Not authenticated, redirecting to login...');
+      window.location.href = '../login.html';
+      return false;
     }
-    if (!isAdmin()) {
-        alert('Truy cập bị từ chối. Chỉ Admin mới có quyền.');
-        window.location.href = 'dashboard.html';
-        return false;
+    if (!this.isAdmin()) {
+      console.warn('Not admin, redirecting to dashboard...');
+      window.location.href = '../dashboard.html';
+      return false;
     }
     return true;
-}
+  },
 
-/**
- * Logout
- * Xóa auth data và redirect về login
- */
-function logout() {
-    // Chỗ này sẽ gọi logout API nếu cần
-    // fetch(getApiUrl('/auth/logout'), {
-    //     method: 'POST',
-    //     headers: getAuthHeaders()
-    // });
-
-    clearAuth();
-    window.location.href = 'login.html';
-}
-
-/**
- * Auto-redirect nếu đã login
- * Dùng cho login/register pages
- */
-function redirectIfAuthenticated() {
-    if (isAuthenticated()) {
-        window.location.href = 'dashboard.html';
+  /**
+   * Logout user
+   */
+  async logout() {
+    try {
+      await fetch(`${window.API_CONFIG.BASE_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.clear();
+      window.location.href = '/login.html';
     }
-}
+  },
+
+  /**
+   * Debug: Show current auth state
+   */
+  debugAuthState() {
+    console.log('=== Auth State ===');
+    console.log('userId:', localStorage.getItem('userId'));
+    console.log('username:', localStorage.getItem('username'));
+    console.log('userRole:', localStorage.getItem('userRole'));
+    console.log('isLoggedIn:', this.isLoggedIn());
+    console.log('isAdmin:', this.isAdmin());
+    console.log('==================');
+  }
+};
+
+// Make Auth available globally
+window.Auth = Auth;
