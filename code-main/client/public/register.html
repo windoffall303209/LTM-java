@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Auction System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Inline styles cho register page */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .register-container {
+            width: 100%;
+            max-width: 480px;
+        }
+        .register-card {
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="card register-card">
+            <div class="card-body p-5">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">🔨 Auction System</h2>
+                    <p class="text-muted">Tạo tài khoản mới</p>
+                </div>
+
+                <!-- Alert Container -->
+                <div id="alertContainer"></div>
+
+                <!-- Register Form -->
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required minlength="3" placeholder="Tối thiểu 3 ký tự">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="email@example.com">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required minlength="6" placeholder="Tối thiểu 6 ký tự">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="Nhập lại password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                        Đăng ký
+                    </button>
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Đã có tài khoản?
+                            <a href="login.html" class="text-decoration-none fw-bold">Đăng nhập ngay</a>
+                        </p>
+                        <a href="index.html" class="text-muted small">← Quay về trang chủ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Config -->
+    <script src="js/config.js"></script>
+    <script>
+        // Chỗ này sẽ implement register logic
+        // Tham khảo:
+        /*
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // 1. Validate passwords match
+            if (password !== confirmPassword) {
+                // Hiển thị error: Passwords không khớp
+                return;
+            }
+
+            // 2. Disable submit button
+            // 3. Call API: POST /api/auth/register với {username, email, password}
+            // 4. Handle response:
+            //    - Nếu success: redirect to login.html với success message
+            //    - Nếu fail: hiển thị error message (username/email đã tồn tại)
+            // 5. Enable submit button lại
+        });
+        */
+    </script>
+</body>
+</html>

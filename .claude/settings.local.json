@@ -16,7 +16,11 @@
       "Bash(do cp \"C:\\Users\\WIND-OF-FALL\\Downloads\\ClientServer2\\source\\server\\src\\main\\java\\com\\auction\\dto$file\" \"C:\\Users\\WIND-OF-FALL\\Downloads\\ClientServer2_BaseProject\\source\\server\\src\\main\\java\\com\\auction\\dto$file\")",
       "Bash(done)",
       "Bash(mvn clean compile:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(md5sum:*)",
+      "Bash(git checkout:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []
